@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Montserrat', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: local('Montserrat'), url("./static/fonts/montserrat/Montserrat-Regular.ttf");
+}
+.ms-Fabric,
+*[lang^="ru"] .ms-Fabric, .ms-Fabric *[lang^="ru"], .ms-Fabric[lang^="ru"] {
+  font-family: "Montserrat", "Segoe UI Web (Cyrillic)", "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", sans-serif !important;
+}

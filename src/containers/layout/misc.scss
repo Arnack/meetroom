@@ -1,0 +1,125 @@
+@import "src/scss/variables";
+
+.h-40 {
+  height: 40px;
+}
+
+.add-new-btn {
+  position: fixed;
+  bottom: 70px;
+  right: 70px;
+  background-color: $bright-tag-color;
+  border-radius: 40px;
+  padding: 29px;
+  border: none;
+  color: white;
+  transition: .2s;
+  height: 62px;
+
+  .ms-Button-textContainer {
+    display: none;
+  }
+
+  i {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+
+  &:hover {
+    background-color: $bright-tag-color;
+    border: none;
+    color: white;
+
+    .ms-Button-textContainer {
+      display: block;
+    }
+  }
+
+}
+
+.dark-fluent-table {
+  .ms-DetailsHeader {
+    border-radius: 4px;
+    background: #363c4d;
+    margin-top: 16px;
+    margin-bottom: 4px;
+    //min-height: 28px;
+    padding: 0;
+
+    .ms-DetailsHeader-cell {
+      //padding: 28px;
+      &:first-child {
+        border-radius: 4px 0 0 4px;
+      }
+
+      .ms-DetailsHeader-cellTitle {
+        //padding: 8px 0px 8px 26px;
+      }
+
+    }
+  }
+
+
+  .ms-DetailsList-contentWrapper {
+    border-radius: 4px;
+    background: #2f374a;
+
+    .ms-FocusZone.ms-DetailsRow {
+      border-radius: 4px;
+      background: #2f374a;
+
+      &:hover {
+        background: #2d3244;
+      }
+
+      .ms-DetailsRow-cell {
+        padding: 0 12px;
+        &>span {
+          line-height: 42px;
+        }
+      }
+    }
+  }
+}
+
+
+.center {
+  text-align: center;
+}
+
+/* components */
+
+.big-input {
+  margin-bottom: 6px;
+
+  .ms-TextField-fieldGroup {
+    border-radius: 6px;
+    height: 48px;
+    border-color: $input-border-color;
+  }
+
+  .ms-Dropdown > span {
+    border-radius: 6px;
+    height: 48px;
+    border-color: $input-border-color;
+    line-height: 44px;
+  }
+}
+
+.big-button {
+  padding: 24px 72px;
+  margin: 4px;
+  text-transform: uppercase;
+}
+
+#cross-close-button {
+  border: none;
+  color: $primary-btn-color;
+  float: right;
+  text-transform: uppercase;
+}
+
+.title-row {
+  margin-bottom: 24px;
+}

@@ -1,0 +1,45 @@
+@import "./src/scss/variables";
+@import "./misc";
+@import "./src/scss/base";
+
+.app-container {
+  background-color: $primary-bg-color;
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  height: calc(100vh - #{$horizontal-menu-height});
+  margin: $horizontal-menu-height auto 0 auto;
+  max-width: 1132px;
+}
+
+.content-container {
+  background: $primary-bg-color;
+  height: 100vh;
+  padding: 44px;
+  box-sizing: border-box;
+}
+
+#app-logo {
+  color: white;
+  text-align: center;
+  margin: 50px auto 35px auto;
+  cursor: pointer;
+}
+
+#app-version {
+  color: $secondary-text-color;
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
+}
+
+.app-header {
+  width: 100vw;
+
+  nav {
+    margin: 0 auto;
+    border-bottom: 1px solid lightgray;
+  }
+}
+

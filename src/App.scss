@@ -1,0 +1,31 @@
+@import "./scss/variables";
+@import 'node_modules/office-ui-fabric-react/dist/sass/Fabric';
+
+h1 {
+  font-size: 28px;
+  color: $primary-text-color;
+}
+h2 {
+  font-size: 20px;
+  color: $primary-text-color;
+}
+h3 {
+  font-size: 16px;
+  color: $primary-text-color;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.items-right {
+  text-align: right;
+}
+
+.marginless {
+  margin: 0;
+}

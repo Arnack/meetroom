@@ -1,0 +1,17 @@
+@import "src/scss/variables";
+
+.action-panel {
+  border: 1px solid $primary-btn-color;
+  border-radius: 8px;
+  padding: 28px;
+  margin-top: 20px;
+
+  .form-container {
+    margin: 120px auto;
+    width: 450px;
+
+    .ms-Label {
+      color: #a6a7ad;
+    }
+  }
+}

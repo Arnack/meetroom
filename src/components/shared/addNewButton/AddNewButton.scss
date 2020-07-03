@@ -1,0 +1,45 @@
+@import "src/scss/variables";
+
+.add-new-btn_container {
+  position: fixed;
+  bottom: 70px;
+  right: 70px;
+  background-color: $bright-tag-color;
+  border-radius: 32px;
+  border: none;
+  color: white;
+  transition: .2s;
+  height: 64px;
+  min-width: 64px;
+  cursor: pointer;
+
+  display: table-cell;
+  vertical-align: middle;
+
+  text-align: center;
+
+  .add-new-btn_icon {
+    font-size: 36px;
+    line-height: 64px;
+    font-weight: lighter;
+  }
+
+  .add-new-btn_text {
+    display: none;
+    line-height: 64px;
+    max-width: 220px;
+  }
+
+  &:hover {
+    width: 270px;
+
+    .add-new-btn_text {
+      display: inline-block;
+    }
+
+    .add-new-btn_icon {
+      margin-right: 22px;
+      float: right;
+    }
+  }
+}

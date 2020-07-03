@@ -1,0 +1,46 @@
+@import "src/scss/variables";
+
+#horizontal-nav-wrapper {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  height: 100px;
+  background: $secondary-bg-color;
+
+  #main-logo {
+    max-width: 320px;
+
+    .text-logo {
+      line-height: 100px;
+      margin: 0 80px;
+      max-width: 200px;
+    }
+  }
+
+  #top-menu{
+    position: fixed;
+    top: 29px;
+    left: 320px;
+    width: 720px;
+  }
+
+  #far-items {
+    max-width: 720px;
+    margin-right: 72px;
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    .ms-Persona {
+      .ms-Persona-coin {
+        border: 2px solid #b2b3bc;
+        padding: 2px;
+        border-radius: 50%;
+      }
+
+      .ms-Persona-primaryText .ms-TooltipHost {
+
+      }
+    }
+  }
+}

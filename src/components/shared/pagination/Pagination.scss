@@ -1,0 +1,36 @@
+@import "src/scss/variables";
+
+.pagination-wrapper {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pagination-item {
+  transition: .2s;
+  height: 32px;
+  color: #0078d4;
+  cursor: pointer;
+  border: 1px solid $gray50;
+  margin-left: -1px;
+  box-sizing: border-box;
+  position: relative;
+  background: white;
+
+  &:hover:not(:disabled) {
+    color: white;
+    background: $primary-color;
+    border: 1px solid $primary-color;
+  }
+
+  &:disabled {
+    color: $gray100;
+  }
+}
+
+.pagination-number-item {
+  cursor: pointer;
+  position: relative;
+  top: -2px;
+  background: white;
+  padding: 0 12px;
+}
