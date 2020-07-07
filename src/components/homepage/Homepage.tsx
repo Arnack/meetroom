@@ -8,7 +8,7 @@ export const Homepage = () => {
     return <>
         <div className="home-search-container">
             <SearchBar />
-            <AddNewButton text={"Создать расследование"} callBack={() => {}} />
+            <AddNewButton callBack={() => {}} />
 
         </div>
     </>

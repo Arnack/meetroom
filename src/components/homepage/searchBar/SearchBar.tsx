@@ -8,6 +8,8 @@ import { TagFormat } from "../../../model/types";
 import { ChoiceGroup, IChoiceGroupOption } from 'office-ui-fabric-react/lib/ChoiceGroup';
 
 
+
+
 const searchIconStyle = {
     root: {
         cursor: "pointer"
