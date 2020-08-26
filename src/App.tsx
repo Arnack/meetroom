@@ -9,7 +9,7 @@ import LoginPage from "./components/login/LoginPage";
 import { growlState } from "./stores/growlStore/growlStore";
 import { hideGrowl, showMessage } from "./stores/growlStore/growlEvents";
 import { IGrowl } from "./model/misc/IGrowl";
-import { db, firebase } from "./firebase";
+import { db, firebase, setupPresence } from "./firebase";
 import useCollection from "./helpers/useCollection";
 
 initializeIcons();
@@ -37,7 +37,10 @@ function useAuth() {
                 db
                     .collection('users')
                     .doc(tmpUser.uid)
-                    .set(tmpUser, {merge: true})
+                    .set(tmpUser, {merge: true});
+
+                setupPresence(tmpUser);
+
             } else {
                 setUser(null);
             }
