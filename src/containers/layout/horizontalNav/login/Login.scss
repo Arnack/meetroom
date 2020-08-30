@@ -1,0 +1,12 @@
+@import "src/scss/variables";
+
+.logout-btn {
+  width: 36px;
+  height: 36px;
+  text-align: center;
+  color: #c7c8cc;
+
+  &:hover {
+    color: #c7c8cc;
+  }
+}

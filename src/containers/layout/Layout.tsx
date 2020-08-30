@@ -14,10 +14,14 @@ import { Homepage } from "../../components/homepage/Homepage";
 import { greenTheme } from "./themes/darckGreenTheme";
 loadTheme(greenTheme);
 
-const Layout: FunctionComponent = () => {
+interface IProps {
+    user: any
+}
+
+const Layout: FunctionComponent<IProps> = ({user}) => {
     return (
         <Fabric className="app-container">
-            <HorizontalNav />
+            <HorizontalNav user={user} />
 
             <div className="content-wrapper">
                 <div className="content-container">
@@ -34,4 +38,5 @@ const Layout: FunctionComponent = () => {
         </Fabric>)
 }
 
-export default ProtectionWrapper()(Layout);
+// export default ProtectionWrapper()(Layout);
+export default Layout;

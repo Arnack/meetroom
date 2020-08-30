@@ -1,6 +1,5 @@
 import React, {ComponentClass, FunctionComponent} from "react";
 import {StorageService} from "../../services/StorageService";
-import LoginPage from "../../components/login/LoginPage";
 
 /**
  * HOC, to handle access to app components
@@ -12,7 +11,8 @@ export const ProtectionWrapper = () => (WrappedComponent: ComponentClass | Funct
         }
         render(): React.ReactNode {
             if (!StorageService.isLoggedIn()) {
-                return <LoginPage />;
+                // return <LoginPage />;
+                return <div />;
             }
             return (<WrappedComponent {...this.props} />);
         }

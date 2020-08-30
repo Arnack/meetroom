@@ -5,12 +5,12 @@ import Layout from "./containers/layout/Layout";
 import { initializeIcons } from '@uifabric/icons';
 import { history } from "./helpers/browserHistory";
 import { Route, Router } from "react-router-dom";
-import LoginPage from "./components/login/LoginPage";
 import { growlState } from "./stores/growlStore/growlStore";
 import { hideGrowl, showMessage } from "./stores/growlStore/growlEvents";
 import { IGrowl } from "./model/misc/IGrowl";
 import { db, firebase, setupPresence } from "./firebase";
 import useCollection from "./helpers/useCollection";
+import {useAuth} from "./helpers/useAuth";
 
 initializeIcons();
 growlState
@@ -20,35 +20,7 @@ growlState
     })
     .on(hideGrowl, () => ({title: '', description: '', isVisible: false}));
 
-function useAuth() {
-    const [user, setUser] = useState();
-    //auth auth
-    useEffect(() => {
-        return firebase.auth().onAuthStateChanged((firebaseUser) => {
 
-            if (firebaseUser) {
-                const tmpUser = {
-                    displayName: firebaseUser.displayName,
-                    photoURL: firebaseUser.photoURL,
-                    uid: firebaseUser.uid,
-                    email: firebaseUser.email
-                }
-                setUser(tmpUser);
-                db
-                    .collection('users')
-                    .doc(tmpUser.uid)
-                    .set(tmpUser, {merge: true});
-
-                setupPresence(tmpUser);
-
-            } else {
-                setUser(null);
-            }
-        })
-    }, []);
-
-    return user;
-}
 
 
 function App() {
@@ -58,17 +30,6 @@ function App() {
 
   return (
     <div className="App">
-        {user ? <div
-            style={{backgroundColor: "forestgreen", color: "white", position: "absolute", zIndex: 400, top: '100px'}}
-        >
-            <button onClick={() => {firebase.auth().signOut()}}>log out!!!</button>
-            <img src={user.photoURL}
-
-                 style={{height: '50px', width: "50px", position: "relative", zIndex: 401}}
-            />
-        </div> :
-        <Login />
-        }
         <input type="text"
                style={{position: "absolute",
                zIndex: 999999
@@ -102,8 +63,7 @@ function App() {
         }
         <ErrorBoundary>
             <Router history={history}>
-                <Layout />
-                <Route path="/login" component={LoginPage}/>
+                <Layout user={user} />
             </Router>
         </ErrorBoundary>
     </div>
@@ -111,31 +71,3 @@ function App() {
 }
 
 export default App;
-
-
-const Login = () => {
-
-    const [authErr, setAuthErr] = useState(null);
-
-    const handleSignIn = async () => {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        try {
-            const result = await firebase.auth().signInWithPopup(provider);
-        } catch (err) {
-            setAuthErr(err);
-        }
-        // const user = result.user;
-    }
-
-    return <div
-        style={{backgroundColor: "forestgreen", color: "white", position: "absolute", zIndex: 400, top: '100px'}}
-    >
-        <button onClick={handleSignIn}>log in with google</button>
-        {authErr && <div>
-            <p>{
-                // @ts-ignore
-                authErr.message
-            }</p>
-        </div>}
-    </div>
-}
