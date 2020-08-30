@@ -38,7 +38,7 @@ const secondaryIconStyle = mergeStyles({
     color: '#4c515b'
 });
 
-export const ArticleCardEntry: FunctionComponent<IProps> = ({ title, tags, author, publishDay, viewNumber, commentNumber, isPrivate }) => {
+export const RoomCardEntry: FunctionComponent<IProps> = ({ title, tags, author, publishDay, viewNumber, commentNumber, isPrivate }) => {
     return <>
         <div className="article-card">
 
