@@ -12,9 +12,10 @@ export const Homepage = () => {
 
     return <>
         <div className="home-search-container">
+
             <RoomList />
-            <AddNewButton callBack={() => {}} />
+            <AddNewButton callBack={showModal} />
         </div>
-        <NewRoom />
+        <NewRoom isOpen={isModalOpen} hideModal={hideModal} />
     </>
 }
