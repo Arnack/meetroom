@@ -1,22 +1,51 @@
-import React, {FunctionComponent} from "react";
+import React, {FunctionComponent, useState} from "react";
 import {Modal, IIconProps} from 'office-ui-fabric-react';
 import { useId } from '@uifabric/react-hooks';
+import SelectSearch from 'react-select-search';
 import {
     getTheme,
     FontWeights,
     mergeStyleSets
 } from 'office-ui-fabric-react';
+import { Dropdown, DropdownMenuItemType, IDropdownOption, IDropdownStyles } from 'office-ui-fabric-react/lib/Dropdown';
 
 import {DefaultButton, PrimaryButton, IconButton} from 'office-ui-fabric-react';
 import { TextField, MaskedTextField } from 'office-ui-fabric-react/lib/TextField';
+import { Slider } from 'office-ui-fabric-react/lib/Slider';
+import "./selectSearch.scss";
+
+import style from "./newRoom.module.scss";
 
 interface IProps {
     isOpen: boolean;
     hideModal: () => void;
 }
 
+const languageLevels = [
+    {key: '0', text: 'Any Level'},
+    {key: '1', text: 'Elementary (A1)'},
+    {key: '2', text: 'Beginner (A2)'},
+    {key: '3', text: 'Intermediate (B1)'},
+    {key: '4', text: 'Upper Intermediate (B2)'},
+    {key: '5', text: 'Advanced (C1)'},
+    {key: '6', text: 'Proficiency (C2)'},
+]
+
+const languages = [
+    {name: 'English', value: 'en'},
+    {name: 'German', value: 'ge'},
+    {name: 'Indonesian', value: 'in'},
+    {name: 'Russian', value: 'ru'},
+    {name: 'Swedish', value: 'sv'},
+    {name: 'Ukrainian', value: 'uk'},
+]
+
 const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
 
+    const [topic, setTopic] = useState('');
+    const [peopleCount, setPeopleCount] = useState(3);
+    const [language, setLanguage] = useState('en');
+    const [level, setLevel] = useState('0');
 
     return <>
         <Modal
@@ -25,7 +54,7 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
             containerClassName={contentStyles.container}
         >
             <div className={contentStyles.header}>
-                <span id={useId()}>{useId()}</span>
+                <h3>{"Create new room"}</h3>
                 <IconButton
                     styles={iconButtonStyles}
                     iconProps={cancelIcon}
@@ -34,7 +63,43 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
                 />
             </div>
             <div className={contentStyles.body}>
-                <TextField />
+                {/*TODO Style it */}
+                <SelectSearch options={languages}
+                              closeOnSelect={false}
+                              search={true}
+                              autoComplete={"on"}
+                              placeholder={"Choose a language"} />
+
+                <TextField label={"Topic"}
+                           placeholder={"Any topic"}
+                           onChange={(ev, newVal) =>
+                               setTopic(newVal as string)}
+                           required />
+                <Slider
+                    min={2}
+                    max={5}
+                    value={peopleCount}
+                    label={"Maximum People"}
+                    onChange={(count) => setPeopleCount(count)}
+                    showValue
+                />
+
+
+
+                <Dropdown label={"Level"}
+                          selectedKey={level}
+                          options={languageLevels}
+                          onChange={(event, item) =>
+                              setLevel((item as any).key)
+                          }
+                          required
+                />
+
+                <div className={style.bottomButtons}>
+                    <DefaultButton onClick={hideModal} text={"Cancel"} />
+                    <PrimaryButton text={"Create"} />
+                </div>
+
             </div>
 
         </Modal>
