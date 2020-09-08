@@ -79,7 +79,8 @@ export const HorizontalNav:FunctionComponent<IProps> = ({user}) => {
             <div id="far-items">
                 <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 10 }} styles={farItemsWrapperStyle}>
 
-                    <LanguageSwitcher/>
+                    {/*TODO improve component*/}
+                    {/*<LanguageSwitcher/>*/}
 
                     {user ?
                     <>

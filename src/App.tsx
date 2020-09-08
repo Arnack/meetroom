@@ -21,8 +21,6 @@ growlState
     .on(hideGrowl, () => ({title: '', description: '', isVisible: false}));
 
 
-
-
 function App() {
 
     const users = useCollection('users', 'id');
@@ -55,9 +53,9 @@ function App() {
         {
             users.map((item:any) => {
                 return <div style={{position: "relative", zIndex: 99999, background: "steelblue"}}>
-                    <span>{item.id}</span>
-                    <span>{item.carma}</span>
-                    <span>{item.points}</span>
+                    <span>id: {item.id}</span>
+                    <span>carma: {item.carma}</span>
+                    <span>item: {item.points}</span>
                 </div>
             })
         }

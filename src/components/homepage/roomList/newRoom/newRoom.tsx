@@ -2,6 +2,7 @@ import React, {FunctionComponent, useState} from "react";
 import {Modal, IIconProps} from 'office-ui-fabric-react';
 import { useId } from '@uifabric/react-hooks';
 import SelectSearch from 'react-select-search';
+import { Label } from 'office-ui-fabric-react/lib/Label';
 import {
     getTheme,
     FontWeights,
@@ -15,6 +16,7 @@ import { Slider } from 'office-ui-fabric-react/lib/Slider';
 import "./selectSearch.scss";
 
 import style from "./newRoom.module.scss";
+import {greenTheme} from "../../../../containers/layout/themes/darckGreenTheme";
 
 interface IProps {
     isOpen: boolean;
@@ -32,12 +34,12 @@ const languageLevels = [
 ]
 
 const languages = [
-    {name: 'English', value: 'en'},
-    {name: 'German', value: 'ge'},
-    {name: 'Indonesian', value: 'in'},
-    {name: 'Russian', value: 'ru'},
-    {name: 'Swedish', value: 'sv'},
-    {name: 'Ukrainian', value: 'uk'},
+    {name: 'English', value: 'english'},
+    {name: 'German', value: 'grmane'},
+    {name: 'Indonesian', value: 'indonesian'},
+    {name: 'Russian', value: 'russian'},
+    {name: 'Swedish', value: 'swedish'},
+    {name: 'Ukrainian', value: 'ukrainian'},
 ]
 
 const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
@@ -46,6 +48,19 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
     const [peopleCount, setPeopleCount] = useState(3);
     const [language, setLanguage] = useState('en');
     const [level, setLevel] = useState('0');
+
+    const validateForm = (): boolean => {
+        return !!topic && !!peopleCount && !!language && !!level
+    }
+
+    //TODO add growl on failure
+    const onFormSubmit = () => {
+        if (validateForm()) {
+            //Create new room
+
+        }
+
+    }
 
     return <>
         <Modal
@@ -63,18 +78,24 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
                 />
             </div>
             <div className={contentStyles.body}>
-                {/*TODO Style it */}
-                <SelectSearch options={languages}
-                              closeOnSelect={false}
-                              search={true}
-                              autoComplete={"on"}
-                              placeholder={"Choose a language"} />
+
 
                 <TextField label={"Topic"}
                            placeholder={"Any topic"}
                            onChange={(ev, newVal) =>
                                setTopic(newVal as string)}
                            required />
+                <br/>
+
+                <Label required>Language</Label>
+                <SelectSearch options={languages}
+                              search={true}
+                              autoComplete={"on"}
+                              onChange={(newValue) =>
+                              setLanguage(newValue as unknown as string)}
+                              placeholder={"Choose a language"} />
+                              <br/>
+
                 <Slider
                     min={2}
                     max={5}
@@ -94,6 +115,7 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
                           }
                           required
                 />
+                <br/>
 
                 <div className={style.bottomButtons}>
                     <DefaultButton onClick={hideModal} text={"Cancel"} />
@@ -107,7 +129,8 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
 }
 
 
-const theme = getTheme();
+// const theme = getTheme();
+const theme = greenTheme;
 const contentStyles = mergeStyleSets({
     container: {
         display: 'flex',
@@ -118,12 +141,11 @@ const contentStyles = mergeStyleSets({
         theme.fonts.xLargePlus,
         {
             flex: '1 1 auto',
-            borderTop: `4px solid ${theme.palette.themePrimary}`,
             color: theme.palette.neutralPrimary,
             display: 'flex',
             alignItems: 'center',
             fontWeight: FontWeights.semibold,
-            padding: '12px 12px 14px 24px',
+            padding: '2px 12px 14px 24px',
         },
     ],
     body: {
