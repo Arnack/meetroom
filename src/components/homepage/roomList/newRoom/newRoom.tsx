@@ -17,6 +17,8 @@ import "./selectSearch.scss";
 
 import style from "./newRoom.module.scss";
 import {greenTheme} from "../../../../containers/layout/themes/darckGreenTheme";
+import {db} from "../../../../firebase";
+import {log} from "util";
 
 interface IProps {
     isOpen: boolean;
@@ -35,7 +37,7 @@ const languageLevels = [
 
 const languages = [
     {name: 'English', value: 'english'},
-    {name: 'German', value: 'grmane'},
+    {name: 'German', value: 'german'},
     {name: 'Indonesian', value: 'indonesian'},
     {name: 'Russian', value: 'russian'},
     {name: 'Swedish', value: 'swedish'},
@@ -46,7 +48,7 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
 
     const [topic, setTopic] = useState('');
     const [peopleCount, setPeopleCount] = useState(3);
-    const [language, setLanguage] = useState('en');
+    const [language, setLanguage] = useState('');
     const [level, setLevel] = useState('0');
 
     const validateForm = (): boolean => {
@@ -57,7 +59,26 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
     const onFormSubmit = () => {
         if (validateForm()) {
             //Create new room
-
+            db  //rooms/8dPoVTMHfBifOg3hoEuM/messages
+                .collection("rooms")
+                .add({
+                    //TODO add initial user
+                    // user: db.collection('users').doc(user.uid),
+                    topic: topic,
+                    maxPeople: peopleCount,
+                    language: language,
+                    level: level,
+                    createdAt: new Date()
+                })
+                //TODO remove then
+                .then((res) => {
+                    console.log('res', res);
+                })
+                //TODO growl error
+                .catch((err) => {
+                    console.error('err', err.toString());
+                    }
+                )
         }
 
     }
@@ -119,7 +140,7 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
 
                 <div className={style.bottomButtons}>
                     <DefaultButton onClick={hideModal} text={"Cancel"} />
-                    <PrimaryButton text={"Create"} />
+                    <PrimaryButton onClick={onFormSubmit} text={"Create"} />
                 </div>
 
             </div>
