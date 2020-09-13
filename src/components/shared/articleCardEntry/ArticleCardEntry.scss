@@ -1,9 +1,8 @@
 @import "src/scss/variables";
 
 .article-card {
-  border-radius: 20px;
+  border-radius: 4px;
   padding: 27px 21px 9px 20px;
-  margin-bottom: 25px;
   background-color: $secondary-bg-color;
 
   .entry-title {
@@ -15,40 +14,12 @@
     }
   }
 
-  .article-access {
-    cursor: pointer;
-  }
+  .facepile-list {
+    margin-top: 12px;
+    margin-bottom: 12px;
 
-  .tag-container {
-    padding-top: 11px;
-    padding-bottom: 6px;
-
-    .entry-tag {
-      margin-right: 8px;
-      font-size: 12px;
-      color: $tag-color;
+    .ms-Facepile-member {
       cursor: pointer;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .bottom-info {
-    color: $external-color;
-
-    .bottom-text-item {
-      font-size: 12px;
-      margin-right: 18px;
-      position: relative;
-      top: -3px;
-      margin-left: 4px;
-      cursor: pointer;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 }

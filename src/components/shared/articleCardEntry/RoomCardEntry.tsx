@@ -1,18 +1,15 @@
-import React, { FunctionComponent } from "react";
+import React, {FunctionComponent} from "react";
 import "./ArticleCardEntry.scss"
-import { DateFormat, TagFormat } from "../../../model/types";
-import { FontIcon } from 'office-ui-fabric-react/lib/Icon';
-import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
-import { Separator } from 'office-ui-fabric-react/lib/Separator';
+import {mergeStyles} from 'office-ui-fabric-react/lib/Styling';
+import {PrimaryButton} from "office-ui-fabric-react";
+import {Facepile, OverflowButtonType} from 'office-ui-fabric-react/lib/Facepile';
 
 interface IProps {
-    title: string;
-    tags: TagFormat[];
-    author: string;
-    publishDay: DateFormat;
-    viewNumber: number;
-    commentNumber: number;
-    isPrivate: boolean;
+    language: string;
+    languageLevel: string;
+    author?: string;
+    users?: any[]; //TODO switch to IUser[] type
+    topic?: string;
 }
 
 const primaryIconStyle = mergeStyles({
@@ -29,7 +26,6 @@ const primaryUnlockIconStyle = mergeStyles({
     margin: '0 8px',
     color: "#6DAD57"
 });
-
 const secondaryIconStyle = mergeStyles({
     fontSize: 16,
     height: 12,
@@ -38,60 +34,61 @@ const secondaryIconStyle = mergeStyles({
     color: '#4c515b'
 });
 
-export const RoomCardEntry: FunctionComponent<IProps> = ({ title, tags, author, publishDay, viewNumber, commentNumber, isPrivate }) => {
+const facepilePersonas = [
+    {
+        personaName: "Annabelle Lee",
+    },
+    {
+        personaName: "Mickhail Lee",
+    },
+    {
+        personaName: "Nicolle Lee",
+    },
+    {
+        personaName: "sfa fasd",
+    },
+    {
+        personaName: "kpjno njdfsl",
+    },
+    {
+        personaName: "mmcnc nviir  ",
+    },
+    {
+        personaName: "btbgrt mkipn  ",
+    }
+]
+
+export const RoomCardEntry: FunctionComponent<IProps> = ({language, languageLevel, author, users, topic}) => {
     return <>
-        <div className="article-card">
+        <div className="ms-Grid-col ms-xxl4 ms-xl6 ms-md6 ms-sm6" style={{padding: "20px 10px"}}>
+            <div className="article-card">
 
-            <div className="ms-Grid" dir="ltr">
+                <h4 className="marginless entry-title">
+                    {language}
+                    <small>
+                        {languageLevel}
+                    </small>
+                </h4>
+                <span>{topic || ""}</span>
 
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm10 ms-md11">
-                        <h3 className="marginless entry-title">
-                            {title}
-                        </h3>
-                    </div>
-                    <div className="ms-Grid-col ms-sm2 ms-md1">
-                        <FontIcon iconName={`${isPrivate ? "Lock" : "Unlock"}`}
-                                  className={`${isPrivate ? primaryIconStyle : primaryUnlockIconStyle} right article-access`}/>
-                    </div>
-                </div>
-
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm12 tag-container">
-                        {tags.map((item) => (
-                            <span className="entry-tag">{item.label}</span>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-sm12">
-                        <Separator />
-                    </div>
+                <div className="facepile-list">
+                    <Facepile
+                        personas={facepilePersonas}
+                        maxDisplayablePersonas={5}
+                        overflowButtonType={OverflowButtonType.descriptive}
+                    />
                 </div>
 
                 <div className="ms-Grid-row bottom-info">
                     <div className="ms-Grid-col ms-sm6 ms-md8">
-                        <FontIcon iconName={"ReminderPerson"}
-                                  className={secondaryIconStyle}/>
-                                  <span className="bottom-text-item">{author}</span>
+
                     </div>
                     <div className="ms-Grid-col ms-sm6 ms-md4 items-right">
-                        <FontIcon iconName={"Calendar"}
-                                  className={secondaryIconStyle}/>
-                                  <span className="bottom-text-item">{new Date(publishDay).toLocaleDateString()}</span>
-
-                        <FontIcon iconName={"RedEye"}
-                                  className={secondaryIconStyle}/>
-                                  <span className="bottom-text-item">{viewNumber}</span>
-
-                        <FontIcon iconName={"Comment"}
-                                  className={secondaryIconStyle}/>
-                                  <span className="bottom-text-item">{commentNumber}</span>
+                        <PrimaryButton text={"Join"}/>
                     </div>
+
                 </div>
             </div>
-
 
         </div>
     </>
