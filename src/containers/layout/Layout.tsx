@@ -12,6 +12,7 @@ import { darkTheme } from "./themes/darkTheme";
 import { NewUser } from "../../components/users/NewUser";
 import { Homepage } from "../../components/homepage/Homepage";
 import { greenTheme } from "./themes/darckGreenTheme";
+import {Room} from "../../components/room/Room";
 loadTheme(greenTheme);
 
 interface IProps {
@@ -27,9 +28,14 @@ const Layout: FunctionComponent<IProps> = ({user}) => {
                 <div className="content-container">
                     <Growl />
                     <Switch>
-                        <Route path="/users/new" component={NewUser}/>
-                        <Route path="/users/:userId" component={UserListPage} render={({match}) => <UserListPage />} />
-                        <Route path="/users" component={UserListPage}/>
+
+                        <Route path="/rooms/:id" component={Room}/>
+                        <Route path="/rooms" component={Homepage}/>
+
+                        {/*TODO remove new user*/}
+                        {/*<Route path="/users/new" component={NewUser}/>*/}
+                        {/*<Route path="/users/:userId" component={UserListPage} render={({match}) => <UserListPage />} />*/}
+                        {/*<Route path="/users" component={UserListPage}/>*/}
 
                         <Route path="/" component={Homepage}/>
                     </Switch>

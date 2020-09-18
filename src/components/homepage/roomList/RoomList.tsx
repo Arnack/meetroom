@@ -52,6 +52,7 @@ export const RoomList = () => {
                     {rooms.map((item: any) => {
                             if (!selectedLang || selectedLang === item.language) {
                                 return <RoomCardEntry key={item.id}
+                                                      id={item.id}
                                                       language={item.language}
                                                       languageLevel={item.level}
                                                       topic={item.topic}

@@ -8,7 +8,7 @@ export const LanguageFilterList = () => {
     const selectedLang = useStore(selectedLanguage);
 
     return <>
-            {languages && languages.length && languages.map((item) =>
+            {languages && !!languages.length && languages.map((item) =>
                 <LanguageSelector
                     isSelected={selectedLang === item}
                     languageName={item}

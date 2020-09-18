@@ -3,8 +3,10 @@ import "./ArticleCardEntry.scss"
 import {mergeStyles} from 'office-ui-fabric-react/lib/Styling';
 import {PrimaryButton} from "office-ui-fabric-react";
 import {Facepile, OverflowButtonType} from 'office-ui-fabric-react/lib/Facepile';
+import {Link} from "react-router-dom";
 
 interface IProps {
+    id: string;
     language: string;
     languageLevel: string;
     author?: string;
@@ -12,27 +14,6 @@ interface IProps {
     topic?: string;
 }
 
-const primaryIconStyle = mergeStyles({
-    fontSize: 21,
-    height: 21,
-    width: 21,
-    margin: '0 8px',
-    color: "#C02A4E"
-});
-const primaryUnlockIconStyle = mergeStyles({
-    fontSize: 21,
-    height: 21,
-    width: 21,
-    margin: '0 8px',
-    color: "#6DAD57"
-});
-const secondaryIconStyle = mergeStyles({
-    fontSize: 16,
-    height: 12,
-    width: 12,
-    margin: '0 6px',
-    color: '#4c515b'
-});
 
 const facepilePersonas = [
     {
@@ -58,7 +39,7 @@ const facepilePersonas = [
     }
 ]
 
-export const RoomCardEntry: FunctionComponent<IProps> = ({language, languageLevel, author, users, topic}) => {
+export const RoomCardEntry: FunctionComponent<IProps> = ({id, language, languageLevel, author, users, topic}) => {
     return <>
         <div className="ms-Grid-col ms-xxl4 ms-xl6 ms-md6 ms-sm6" style={{padding: "20px 10px"}}>
             <div className="article-card">
@@ -84,7 +65,9 @@ export const RoomCardEntry: FunctionComponent<IProps> = ({language, languageLeve
 
                     </div>
                     <div className="ms-Grid-col ms-sm6 ms-md4 items-right">
-                        <PrimaryButton text={"Join"}/>
+                        <Link to={`/rooms/${id}`} >
+                            <PrimaryButton text={"Join"}/>
+                        </Link>
                     </div>
 
                 </div>
