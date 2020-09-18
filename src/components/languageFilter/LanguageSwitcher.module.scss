@@ -1,0 +1,14 @@
+.langSelectorItem {
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: white;
+  background-color: #004643;
+  border: 2px solid #004643;
+  margin-left: 12px;
+  cursor: pointer;
+}
+
+.selected {
+  border: 2px solid rgb(249, 188, 96);
+  color: rgb(249, 188, 96);
+}

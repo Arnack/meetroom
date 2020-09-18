@@ -8,6 +8,10 @@ import {TagFormat} from "../../../model/types";
 import {ChoiceGroup, IChoiceGroupOption} from 'office-ui-fabric-react/lib/ChoiceGroup';
 import {db} from "../../../firebase";
 import useCollection from "../../../helpers/useCollection";
+import {renewLanguageList} from "../../../stores/languageSelector/languageSelectorEvents";
+import {LanguageFilterList} from "../../languageFilter/LanguageFilterList";
+import {useStore} from "effector-react";
+import {selectedLanguage} from "../../../stores/languageSelector/languageSelectorStore";
 
 
 const searchIconStyle = {
@@ -28,31 +32,35 @@ const stubTags: TagFormat[] = [
 ]
 
 export const RoomList = () => {
-
     const {t} = useTranslation('homepage', {i18n, useSuspense: false});
 
-
-    const options: IChoiceGroupOption[] = [
-        {key: 'A', text: 'Option A'},
-        {key: 'B', text: 'Option B'},
-        {key: 'D', text: 'Option D'},
-    ];
-
     const rooms = useCollection('rooms');
+    const selectedLang = useStore(selectedLanguage);
+
+    useEffect(() => {
+        renewLanguageList(rooms.map((item: any) => item.language));
+    }, [rooms]);
 
     return <>
-        <ChoiceGroup defaultSelectedKey="B" options={options} required={true}/>
+
+        <LanguageFilterList/>
 
         <div className="article-entries-container">
             {/*TODO get rid of it*/}
             <div className="ms-Grid" dir="ltr">
                 <div className="ms-Grid-row">
-                    {rooms.map((item: any) => <RoomCardEntry key={item.id}
-                                                             language={item.language}
-                                                             languageLevel={item.level}
-                                                             topic={item.topic}
-                        />
-                        )}
+                    {rooms.map((item: any) => {
+                            if (!selectedLang || selectedLang === item.language) {
+                                return <RoomCardEntry key={item.id}
+                                                      language={item.language}
+                                                      languageLevel={item.level}
+                                                      topic={item.topic}
+                                />
+                            } else {
+                                return <></>
+                            }
+                        }
+                    )}
                 </div>
             </div>
         </div>

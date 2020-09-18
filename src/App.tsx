@@ -23,42 +23,43 @@ growlState
 
 function App() {
 
-    const users = useCollection('users', 'id');
+    // const users = useCollection('users', 'id');
     const user = useAuth();
 
   return (
     <div className="App">
-        <input type="text"
-               style={{position: "absolute",
-               zIndex: 999999
-               }}
-               onKeyDown={(e) => {
-            if (e.key === "Enter") {
-                //@ts-ignore
-                let val = e.target.value;
+        {/*TODO use for chat*/}
+        {/*<input type="text"*/}
+        {/*       style={{position: "absolute",*/}
+        {/*       zIndex: 999999*/}
+        {/*       }}*/}
+        {/*       onKeyDown={(e) => {*/}
+        {/*    if (e.key === "Enter") {*/}
+        {/*        //@ts-ignore*/}
+        {/*        let val = e.target.value;*/}
 
-                console.log(val);
+        {/*        console.log(val);*/}
 
-                db  //rooms/8dPoVTMHfBifOg3hoEuM/messages
-                    .collection("rooms")
-                    .doc("tst2")
-                    .collection("mess")
-                    .add({
-                        user: db.collection('users').doc(user.uid),
-                        text: val,
-                        createdAt: new Date()
-                    })
-            }
-        }}/>
-        {
-            users.map((item:any) => {
-                return <div style={{position: "relative", zIndex: 99999, background: "steelblue"}}>
-                    <span>id: {item.id}</span>
-                    <span>carma: {item.carma}</span>
-                    <span>item: {item.points}</span>
-                </div>
-            })
-        }
+        {/*        db  //rooms/8dPoVTMHfBifOg3hoEuM/messages*/}
+        {/*            .collection("rooms")*/}
+        {/*            .doc("tst2")*/}
+        {/*            .collection("mess")*/}
+        {/*            .add({*/}
+        {/*                user: db.collection('users').doc(user.uid),*/}
+        {/*                text: val,*/}
+        {/*                createdAt: new Date()*/}
+        {/*            })*/}
+        {/*    }*/}
+        {/*}}/>*/}
+        {/*{*/}
+        {/*    users.map((item:any) => {*/}
+        {/*        return <div style={{position: "relative", zIndex: 99999, background: "steelblue"}}>*/}
+        {/*            <span>id: {item.id}</span>*/}
+        {/*            <span>carma: {item.carma}</span>*/}
+        {/*            <span>item: {item.points}</span>*/}
+        {/*        </div>*/}
+        {/*    })*/}
+        {/*}*/}
         <ErrorBoundary>
             <Router history={history}>
                 <Layout user={user} />
