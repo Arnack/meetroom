@@ -19,7 +19,6 @@ interface IProps {
 
 export const HorizontalNav:FunctionComponent<IProps> = ({user}) => {
     const { t } = useTranslation('top_menu', { i18n, useSuspense: false });
-    const isLoggedIn = StorageService.isLoggedIn();
 
     const farItemsWrapperStyle: IStackStyles = {
         root: {

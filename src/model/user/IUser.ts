@@ -1,10 +1,10 @@
 import {DateFormat} from "../types";
 
+//TODO remove
 export interface IUser {
-    "id"?: number;
-    "login": string;
-    "email": string;
-    "hash"?: string;
-    "creationDate"?: DateFormat;
-    "updatedOn"?: DateFormat;
+    "uid": string;
+    "displayName": string;
+    "photoURL"?: string;
+    "hash": string;
+    "email": DateFormat;
 }

@@ -9,8 +9,9 @@ export const ProtectionWrapper = () => (WrappedComponent: ComponentClass | Funct
         constructor(props: any) {
             super(props);
         }
+        //TODO refactor this
         render(): React.ReactNode {
-            if (!StorageService.isLoggedIn()) {
+            if (false) {
                 // return <LoginPage />;
                 return <div />;
             }

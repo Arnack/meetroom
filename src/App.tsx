@@ -11,6 +11,8 @@ import { IGrowl } from "./model/misc/IGrowl";
 import { db, firebase, setupPresence } from "./firebase";
 import useCollection from "./helpers/useCollection";
 import {useAuth} from "./helpers/useAuth";
+import {setUser} from "./stores/currentUserStore/currentUserEvents";
+import {IUser} from "./model/user/IUser";
 
 initializeIcons();
 growlState
@@ -24,7 +26,10 @@ growlState
 function App() {
 
     // const users = useCollection('users', 'id');
-    const user = useAuth();
+    const user: IUser = useAuth();
+    if (user) {
+        setUser(user);
+    }
 
   return (
     <div className="App">
