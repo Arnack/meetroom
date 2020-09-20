@@ -1,9 +1,0 @@
-{
-  "login": "Username",
-  "password": "Password",
-  "submit": "Log In",
-  "forgot_pass_link": "Forgot password?",
-  "page": {
-    "title": "User list"
-  }
-}

@@ -2,7 +2,10 @@ import React, {ErrorInfo, ReactNode} from 'react';
 import ErrorBoundaryInfo from "./ErrorBoundaryInfo";
 
 class ErrorBoundary extends React.Component {
-     state = { hasError: false };
+     state = {
+         hasError: false,
+         errorInfo: undefined
+     };
 
     static getDerivedStateFromError() {
         return { hasError: true };
@@ -10,12 +13,13 @@ class ErrorBoundary extends React.Component {
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         console.error(error, errorInfo);
+        this.setState({ errorInfo })
     }
 
     render(): ReactNode {
         if (this.state.hasError) {
             return <>
-                <ErrorBoundaryInfo />
+                <ErrorBoundaryInfo errInfo={this.state.errorInfo} />
             </>;
         }
         return this.props.children;
