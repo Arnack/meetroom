@@ -121,7 +121,7 @@ export const Room: FC<IProps> = (props) => {
             });
 
             //@ts-ignore
-            navigator.mediaDevices.getUserMedia({video: false, audio: true}, (stream: any) => {
+            navigator.mediaDevices.getUserMedia({video: true, audio: true}, (stream: any) => {
                 const call = peer.call(props.id + users[1].id, stream);
 
                 console.log('stream sended')
@@ -150,7 +150,7 @@ export const Room: FC<IProps> = (props) => {
 
     !!peer && peer.on('call', (call: any) => {
         //@ts-ignore
-        navigator.mediaDevices.getUserMedia({video: false, audio: true}, (stream) => {
+        navigator.mediaDevices.getUserMedia({video: true, audio: true}, (stream) => {
             call.answer(stream); // Answer the call with an A/V stream.
             call.on('stream', (remoteStream: any) => {
 
@@ -175,6 +175,7 @@ export const Room: FC<IProps> = (props) => {
         {props.match.params.id}
         {/* @ts-ignore */}
         <video playsInline muted
+               style={{width: '600px', height: '420px'}}
             // @ts-ignore
                ref={userVideo} autoPlay />
         <video  playsInline muted

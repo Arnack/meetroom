@@ -15,31 +15,6 @@ interface IProps {
     topic?: string;
 }
 
-
-const facepilePersonas = [
-    {
-        personaName: "Annabelle Lee",
-    },
-    {
-        personaName: "Mickhail Lee",
-    },
-    {
-        personaName: "Nicolle Lee",
-    },
-    {
-        personaName: "sfa fasd",
-    },
-    {
-        personaName: "kpjno njdfsl",
-    },
-    {
-        personaName: "mmcnc nviir  ",
-    },
-    {
-        personaName: "btbgrt mkipn  ",
-    }
-]
-
 export const RoomCardEntry: FunctionComponent<IProps> = ({id, language, languageLevel, author, topic}) => {
 
     const users = useCollection(`rooms/${id}/participants`)
