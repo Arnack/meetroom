@@ -8,6 +8,7 @@ import {on} from "cluster";
 import useCollection from "../../helpers/useCollection";
 import {DateFormat} from "../../model/types";
 import Peer from "peerjs";
+import {log} from "util";
 
 interface IProps {
     id?: string;
@@ -19,8 +20,10 @@ interface IState {
 
 export const Room: FC<IProps> = (props) => {
 
-    const userVideo = useRef();
-    const partnerVideo = useRef();
+    let userVideo = useRef(null);
+    let partnerVideo = useRef(null);
+    let textRef = useRef(null);
+    let pc = null;
 
     const [roomUsers, setRoomUsers] = useState([]);
 
@@ -105,81 +108,159 @@ export const Room: FC<IProps> = (props) => {
     //         console.log(err);
     //     });
 
-    let peer: any = new Peer(props.id + user.uid );
-    let conn: any = null;
 
-    if (users.length === 1) {
-        peer = new Peer(props.id + user.uid);
-    }
 
-    if (users.length === 2) {
+    //// Old code begins
+    // let peer: any = new Peer(props.id + user.uid );
+    // let conn: any = null;
+    //
+    // if (users.length === 1) {
+    //     peer = new Peer(props.id + user.uid);
+    // }
+    //
+    // if (users.length === 2) {
+    //
+    //     if (!!peer) {
+    //         conn = peer.connect(props.id + users[1].id);
+    //         conn.on('open', () => {
+    //             conn.send('hi!');
+    //         });
+    //
+    //         //@ts-ignore
+    //         navigator.mediaDevices.getUserMedia({video: false, audio: true}, (stream: any) => {
+    //             const call = peer.call(props.id + users[1].id, stream);
+    //
+    //             console.log('stream sended')
+    //
+    //             call.on('stream', (remoteStream: any) => {
+    //                 if (userVideo.current) {
+    //                     // @ts-ignore
+    //                     userVideo.current.stream = remoteStream;
+    //                 }
+    //             });
+    //         }, (err: any) => {
+    //             console.error('Failed to get local stream', err);
+    //         });
+    //     }
+    // }
+    //
+    // !!peer && peer.on('connection', (conn: any) => {
+    //     conn.on('data', (data: any) => {
+    //         // Will print 'hi!'
+    //         console.log(data);
+    //     });
+    //     conn.on('open', () => {
+    //         conn.send('hello!');
+    //     });
+    // });
+    //
+    // !!peer && peer.on('call', (call: any) => {
+    //     //@ts-ignore
+    //     navigator.mediaDevices.getUserMedia({video: true, audio: true}, (stream) => {
+    //         call.answer(stream); // Answer the call with an A/V stream.
+    //         call.on('stream', (remoteStream: any) => {
+    //
+    //             console.log('stream recieved')
+    //
+    //             if (partnerVideo.current) {
+    //                 console.log('pv c')
+    //                 // @ts-ignore
+    //                 partnerVideo.current.stream = remoteStream;
+    //             }
+    //         });
+    //     }, (err: any) => {
+    //         console.error('Failed to get local stream', err);
+    //     });
+    // });
+    ///old code ends
 
-        if (!!peer) {
-            conn = peer.connect(props.id + users[1].id);
-            conn.on('open', () => {
-                conn.send('hi!');
-            });
+    useEffect(() => {
+        const pcConfig = undefined;
+        pc = new RTCPeerConnection(pcConfig);
 
-            //@ts-ignore
-            navigator.mediaDevices.getUserMedia({video: true, audio: true}, (stream: any) => {
-                const call = peer.call(props.id + users[1].id, stream);
-
-                console.log('stream sended')
-
-                call.on('stream', (remoteStream: any) => {
-                    if (userVideo.current) {
-                        // @ts-ignore
-                        userVideo.current.stream = remoteStream;
-                    }
-                });
-            }, (err: any) => {
-                console.error('Failed to get local stream', err);
-            });
+        pc.onicecandidate = (e) => {
+            if (e.candidate) {
+                console.log('e.candidate', JSON.stringify(e.candidate));
+            }
         }
-    }
 
-    !!peer && peer.on('connection', (conn: any) => {
-        conn.on('data', (data: any) => {
-            // Will print 'hi!'
-            console.log(data);
-        });
-        conn.on('open', () => {
-            conn.send('hello!');
-        });
-    });
+        pc.onconnectionstatechange = (e) => {
+            console.log('onconnectionstatechange', e);
+        }
 
-    !!peer && peer.on('call', (call: any) => {
-        //@ts-ignore
-        navigator.mediaDevices.getUserMedia({video: true, audio: true}, (stream) => {
-            call.answer(stream); // Answer the call with an A/V stream.
-            call.on('stream', (remoteStream: any) => {
+        // @ts-ignore
+        pc.ontrack = (pc, ev: RTCTrackEvent) => {
+            console.log('track ev', ev);
 
-                console.log('stream recieved')
-
-                if (partnerVideo.current) {
-                    console.log('pv c')
-                    // @ts-ignore
-                    partnerVideo.current.stream = remoteStream;
-                }
-            });
-        }, (err: any) => {
-            console.error('Failed to get local stream', err);
-        });
-    });
+            if (partnerVideo.current) {
+                // @ts-ignore
+                partnerVideo.current.srcObject = ev.track;
+                pc.addStram(ev.track);
+            }
 
 
+        }
+
+        const constrains = { video: true, audio: true };
+        const success = (stream: any) => {
+            if (userVideo && userVideo.current) {
+                // @ts-ignore
+                userVideo.current.srcObject = stream;
+            }
+        }
+        const failure = (e: any) => {
+            console.error(e);
+        }
+        navigator.mediaDevices.getUserMedia(constrains)
+            .then(success)
+            .catch(failure);
+    }, []);
 
 
 
     return <>
-        {props.match.params.id}
-        {/* @ts-ignore */}
+        <button onClick={() => {
+            //@ts-ignore
+            pc.createOffer({offerToReceiveVideo: 1, offerToReceiveAudio: 1})
+                .then((sdp: RTCSessionDescription) => {
+                    console.log('rtc s d', JSON.stringify(sdp));
+                    //@ts-ignore
+                    pc.setLocalDescription(sdp);
+                }, (e: any) => {
+
+                });
+        }
+        }>
+            Offer
+        </button>
+
+        <button onClick={() => {
+        }
+        }>
+            Answer
+        </button>
+
+        <textarea ref={textRef}></textarea>
+
+
+        <button onClick={() => {
+            pc.setRemoteDescription()
+        }
+        }>
+            Set Descr
+        </button>
+
+        <button onClick={() => {
+        }
+        }>
+            Add candid
+        </button>
+
+
         <video playsInline muted
                style={{width: '600px', height: '420px'}}
-            // @ts-ignore
                ref={userVideo} autoPlay />
         <video  playsInline muted
-            // @ts-ignore
                 ref={partnerVideo} autoPlay />
     </>;
 }
