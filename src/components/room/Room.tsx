@@ -174,63 +174,54 @@ export const Room: FC<IProps> = (props) => {
     // });
     ///old code ends
 
-    useEffect(() => {
-        const pcConfig = undefined;
-        pc = new RTCPeerConnection(pcConfig);
-
-        pc.onicecandidate = (e) => {
-            if (e.candidate) {
-                console.log('e.candidate', JSON.stringify(e.candidate));
-            }
-        }
-
-        pc.onconnectionstatechange = (e) => {
-            console.log('onconnectionstatechange', e);
-        }
-
-        // @ts-ignore
-        pc.ontrack = (pc, ev: RTCTrackEvent) => {
-            console.log('track ev', ev);
-
-            if (partnerVideo.current) {
-                // @ts-ignore
-                partnerVideo.current.srcObject = ev.track;
-                pc.addStram(ev.track);
-            }
-
-
-        }
-
-        const constrains = { video: true, audio: true };
-        const success = (stream: any) => {
-            if (userVideo && userVideo.current) {
-                // @ts-ignore
-                userVideo.current.srcObject = stream;
-            }
-        }
-        const failure = (e: any) => {
-            console.error(e);
-        }
-        navigator.mediaDevices.getUserMedia(constrains)
-            .then(success)
-            .catch(failure);
-    }, []);
+    ///old v2 code
+    // useEffect(() => {
+    //     const pcConfig = undefined;
+    //     pc = new RTCPeerConnection(pcConfig);
+    //
+    //     pc.onicecandidate = (e) => {
+    //         if (e.candidate) {
+    //             console.log('e.candidate', JSON.stringify(e.candidate));
+    //         }
+    //     }
+    //
+    //     pc.onconnectionstatechange = (e) => {
+    //         console.log('onconnectionstatechange', e);
+    //     }
+    //
+    //     // @ts-ignore
+    //     pc.ontrack = (pc, ev: RTCTrackEvent) => {
+    //         console.log('track ev', ev);
+    //
+    //         if (partnerVideo.current) {
+    //             // @ts-ignore
+    //             partnerVideo.current.srcObject = ev.track;
+    //             pc.addStram(ev.track);
+    //         }
+    //
+    //
+    //     }
+    //
+    //     const constrains = { video: true, audio: true };
+    //     const success = (stream: any) => {
+    //         if (userVideo && userVideo.current) {
+    //             // @ts-ignore
+    //             userVideo.current.srcObject = stream;
+    //         }
+    //     }
+    //     const failure = (e: any) => {
+    //         console.error(e);
+    //     }
+    //     navigator.mediaDevices.getUserMedia(constrains)
+    //         .then(success)
+    //         .catch(failure);
+    // }, []);
+    ///old v2 code ends
 
 
 
     return <>
-        <button onClick={() => {
-            //@ts-ignore
-            pc.createOffer({offerToReceiveVideo: 1, offerToReceiveAudio: 1})
-                .then((sdp: RTCSessionDescription) => {
-                    console.log('rtc s d', JSON.stringify(sdp));
-                    //@ts-ignore
-                    pc.setLocalDescription(sdp);
-                }, (e: any) => {
-
-                });
-        }
-        }>
+        <button onClick={() => { }}>
             Offer
         </button>
 
@@ -242,19 +233,6 @@ export const Room: FC<IProps> = (props) => {
 
         <textarea ref={textRef}></textarea>
 
-
-        <button onClick={() => {
-            pc.setRemoteDescription()
-        }
-        }>
-            Set Descr
-        </button>
-
-        <button onClick={() => {
-        }
-        }>
-            Add candid
-        </button>
 
 
         <video playsInline muted

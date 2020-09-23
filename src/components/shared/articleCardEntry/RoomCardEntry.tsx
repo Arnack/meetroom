@@ -25,16 +25,39 @@ export const RoomCardEntry: FunctionComponent<IProps> = ({id, language, language
             }
         });
 
+    const displayLangLevel = (languageLevel: string) => {
+        switch (languageLevel) {
+            case '1':
+                return 'Elementary (A1)';
+            case '2':
+                return 'Beginner (A2)';
+            case '3':
+                return 'Intermediate (B1)';
+            case '4':
+                return 'Upper-Intermediate (B2)';
+            case '5':
+                return 'Advanced (C1)';
+            case '6':
+                return 'Proficiency (C2)';
+            default:
+                return "Any level"
+
+        }
+    }
+
     return <>
         <div className="ms-Grid-col ms-xxl4 ms-xl6 ms-md6 ms-sm6" style={{padding: "20px 10px"}}>
             <div className="article-card">
 
-                <h4 className="marginless entry-title">
+                <h4 className="marginless entry-title"
+                    style={{textTransform: "capitalize"}}
+                >
                     {language}
-                    <small>
-                        {languageLevel}
+                    <small style={{fontSize: "small", fontWeight: 300}}>
+                        <i> {displayLangLevel(languageLevel)} </i>
                     </small>
                 </h4>
+
                 <span>{topic || ""}</span>
 
                 <div className="facepile-list">
