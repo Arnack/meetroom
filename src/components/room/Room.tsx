@@ -34,15 +34,19 @@ export const Room: FC<IProps> = (props) => {
     const user: IUser = useStore(currentUser);
 
     //for removing users on page close
-    //it doesn't work TODO make it work
+    //it doesn't work for user reopened page (ctrl + shift + z) TODO make it work
     const handleWindowBeforeUnload = (e: any) => {
         e.preventDefault();
         return onUnMount();
     };
 
     const onMount = () => {
-        if (user) {
 
+
+        /**
+         * renew userList?
+         */
+        if (user) {
             db
                 .collection("rooms")
                 .doc(props.match.params.id)
@@ -59,6 +63,7 @@ export const Room: FC<IProps> = (props) => {
         }
     }
 
+    //for removing users (and TODO rooms in the future)
     const onUnMount = () => {
         if (user) {
             db
@@ -67,8 +72,22 @@ export const Room: FC<IProps> = (props) => {
                 .collection("participants")
                 .doc(user.uid)
                 .delete()
+                .then(() => {
+                    if (!users.length) {
+                        removeCurrentRoom();
+                    }
+                })
                 .catch((err) => console.error(err.toString()));
         }
+    }
+
+
+    const removeCurrentRoom = () => {
+        db
+            .collection("rooms")
+            .doc(props.match.params.id)
+            .delete()
+            .catch((err) => console.error(err.toString()));
     }
 
     useEffect(() => {
