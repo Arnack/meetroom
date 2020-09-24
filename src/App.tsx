@@ -13,6 +13,7 @@ import useCollection from "./helpers/useCollection";
 import {useAuth} from "./helpers/useAuth";
 import {setUser} from "./stores/currentUserStore/currentUserEvents";
 import {IUser} from "./model/user/IUser";
+import { ToastNotifier } from "./components/shared/toastNotifier/ToastNotifier";
 
 initializeIcons();
 growlState
@@ -33,6 +34,7 @@ function App() {
 
   return (
     <div className="App">
+        <ToastNotifier />
         {/*TODO use for chat*/}
         {/*<input type="text"*/}
         {/*       style={{position: "absolute",*/}

@@ -18,7 +18,8 @@ import "./selectSearch.scss";
 import style from "./newRoom.module.scss";
 import {greenTheme} from "../../../../containers/layout/themes/darckGreenTheme";
 import {db} from "../../../../firebase";
-import {log} from "util";
+import { toast } from "react-toastify";
+import { history } from "../../../../helpers/browserHistory";
 
 interface IProps {
     isOpen: boolean;
@@ -52,7 +53,7 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
     const [level, setLevel] = useState('0');
 
     const validateForm = (): boolean => {
-        return !!topic && !!peopleCount && !!language && !!level
+        return !!peopleCount && !!language && !!level
     }
 
     //TODO add growl on failure
@@ -64,7 +65,7 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
                 .add({
                     //TODO add initial user
                     // user: db.collection('users').doc(user.uid),
-                    topic: topic,
+                    topic: topic || '',
                     maxPeople: peopleCount,
                     language: language,
                     level: level,
@@ -72,13 +73,18 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
                 })
                 //TODO remove then
                 .then((res) => {
-                    console.log('res', res);
+                    console.log('res path', res.id);
+                    history.push(`/rooms/${res.id}`)
+
+                    // hideModal();
                 })
                 //TODO growl error
                 .catch((err) => {
                     console.error('err', err.toString());
                     }
                 )
+        } else {
+            toast.error('Please fill all required fields');
         }
 
     }
@@ -105,7 +111,7 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
                            placeholder={"Any topic"}
                            onChange={(ev, newVal) =>
                                setTopic(newVal as string)}
-                           required />
+                           />
                 <br/>
 
                 <Label required>Language</Label>

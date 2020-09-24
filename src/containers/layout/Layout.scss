@@ -4,7 +4,7 @@
 
 .app-container {
   background-color: $primary-bg-color;
-  min-height: 100vh;
+  min-height: calc(100vh - #{$horizontal-menu-height});
 }
 
 .content-wrapper {
@@ -15,7 +15,7 @@
 
 .content-container {
   background: $primary-bg-color;
-  height: 100vh;
+  height: calc(100vh - 50px);
   padding: 44px;
   box-sizing: border-box;
 }

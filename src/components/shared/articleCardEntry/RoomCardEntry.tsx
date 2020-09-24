@@ -48,17 +48,17 @@ export const RoomCardEntry: FunctionComponent<IProps> = ({id, language, language
     return <>
         <div className="ms-Grid-col ms-xxl4 ms-xl6 ms-md6 ms-sm6" style={{padding: "20px 10px"}}>
             <div className="article-card">
+                <h4 className="marginless entry-title">{topic || "Any topic"}</h4>
 
-                <h4 className="marginless entry-title"
+                <span className=""
                     style={{textTransform: "capitalize"}}
                 >
-                    {language}
+                    {language},
                     <small style={{fontSize: "small", fontWeight: 300}}>
                         <i> {displayLangLevel(languageLevel)} </i>
                     </small>
-                </h4>
+                </span>
 
-                <span>{topic || ""}</span>
 
                 <div className="facepile-list">
 

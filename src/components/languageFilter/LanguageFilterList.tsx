@@ -10,6 +10,7 @@ export const LanguageFilterList = () => {
     return <>
             {languages && !!languages.length && languages.map((item) =>
                 <LanguageSelector
+                    key={item}
                     isSelected={selectedLang === item}
                     languageName={item}
                 />
