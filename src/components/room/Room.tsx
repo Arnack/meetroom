@@ -1,5 +1,5 @@
 import React, {Component, FC, useEffect, useRef, useState} from "react";
-import {db} from "../../firebase";
+import {db, firebase} from "../../firebase";
 import {useAuth} from "../../helpers/useAuth";
 import {currentUser} from "../../stores/currentUserStore/currentUserStore";
 import {useStore} from "effector-react";
@@ -8,7 +8,7 @@ import {on} from "cluster";
 import useCollection from "../../helpers/useCollection";
 import {DateFormat} from "../../model/types";
 import Peer from "peerjs";
-import {log} from "util";
+import {history} from "../../helpers/browserHistory";
 
 interface IProps {
     id?: string;
@@ -58,8 +58,15 @@ export const Room: FC<IProps> = (props) => {
                 })
                 .catch((err) => console.error(err.toString()));
         } else {
-            //TODO remove
+            //if not logged in
             console.error('unable to connect');
+            history.push('/');
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                firebase.auth().signInWithPopup(provider);
+            } catch (err) {
+                console.error(err);
+            }
         }
     }
 
@@ -72,7 +79,7 @@ export const Room: FC<IProps> = (props) => {
                 .collection("participants")
                 .doc(user.uid)
                 .delete()
-                .then(() => {
+                .then(() => { //TODO probably move to return of useEffect
                     if (!users.length) {
                         removeCurrentRoom();
                     }
@@ -98,12 +105,16 @@ export const Room: FC<IProps> = (props) => {
         }
     }, []);
 
+
     useEffect(() => {
         onMount();
 
         return () => {
         }
     }, [user]);
+
+
+
 
 
     const users = useCollection(`rooms/${props.match.params.id}/participants`)
@@ -117,125 +128,8 @@ export const Room: FC<IProps> = (props) => {
         });
     console.log('users', users);
 
-    // navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-    //     .then(stream => {
-    //         //@ts-ignore attach this stream to window object so you can reuse it later
-    //         window.localStream = stream;
-    //         // Your code to use the stream
-    //     })
-    //     .catch((err) =>{
-    //         console.log(err);
-    //     });
 
 
-
-    //// Old code begins
-    // let peer: any = new Peer(props.id + user.uid );
-    // let conn: any = null;
-    //
-    // if (users.length === 1) {
-    //     peer = new Peer(props.id + user.uid);
-    // }
-    //
-    // if (users.length === 2) {
-    //
-    //     if (!!peer) {
-    //         conn = peer.connect(props.id + users[1].id);
-    //         conn.on('open', () => {
-    //             conn.send('hi!');
-    //         });
-    //
-    //         //@ts-ignore
-    //         navigator.mediaDevices.getUserMedia({video: false, audio: true}, (stream: any) => {
-    //             const call = peer.call(props.id + users[1].id, stream);
-    //
-    //             console.log('stream sended')
-    //
-    //             call.on('stream', (remoteStream: any) => {
-    //                 if (userVideo.current) {
-    //                     // @ts-ignore
-    //                     userVideo.current.stream = remoteStream;
-    //                 }
-    //             });
-    //         }, (err: any) => {
-    //             console.error('Failed to get local stream', err);
-    //         });
-    //     }
-    // }
-    //
-    // !!peer && peer.on('connection', (conn: any) => {
-    //     conn.on('data', (data: any) => {
-    //         // Will print 'hi!'
-    //         console.log(data);
-    //     });
-    //     conn.on('open', () => {
-    //         conn.send('hello!');
-    //     });
-    // });
-    //
-    // !!peer && peer.on('call', (call: any) => {
-    //     //@ts-ignore
-    //     navigator.mediaDevices.getUserMedia({video: true, audio: true}, (stream) => {
-    //         call.answer(stream); // Answer the call with an A/V stream.
-    //         call.on('stream', (remoteStream: any) => {
-    //
-    //             console.log('stream recieved')
-    //
-    //             if (partnerVideo.current) {
-    //                 console.log('pv c')
-    //                 // @ts-ignore
-    //                 partnerVideo.current.stream = remoteStream;
-    //             }
-    //         });
-    //     }, (err: any) => {
-    //         console.error('Failed to get local stream', err);
-    //     });
-    // });
-    ///old code ends
-
-    ///old v2 code
-    // useEffect(() => {
-    //     const pcConfig = undefined;
-    //     pc = new RTCPeerConnection(pcConfig);
-    //
-    //     pc.onicecandidate = (e) => {
-    //         if (e.candidate) {
-    //             console.log('e.candidate', JSON.stringify(e.candidate));
-    //         }
-    //     }
-    //
-    //     pc.onconnectionstatechange = (e) => {
-    //         console.log('onconnectionstatechange', e);
-    //     }
-    //
-    //     // @ts-ignore
-    //     pc.ontrack = (pc, ev: RTCTrackEvent) => {
-    //         console.log('track ev', ev);
-    //
-    //         if (partnerVideo.current) {
-    //             // @ts-ignore
-    //             partnerVideo.current.srcObject = ev.track;
-    //             pc.addStram(ev.track);
-    //         }
-    //
-    //
-    //     }
-    //
-    //     const constrains = { video: true, audio: true };
-    //     const success = (stream: any) => {
-    //         if (userVideo && userVideo.current) {
-    //             // @ts-ignore
-    //             userVideo.current.srcObject = stream;
-    //         }
-    //     }
-    //     const failure = (e: any) => {
-    //         console.error(e);
-    //     }
-    //     navigator.mediaDevices.getUserMedia(constrains)
-    //         .then(success)
-    //         .catch(failure);
-    // }, []);
-    ///old v2 code ends
 
 
 

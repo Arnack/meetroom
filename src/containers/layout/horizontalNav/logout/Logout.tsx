@@ -17,7 +17,7 @@ export const Logout = () => {
         <IconButton
             className="logout-btn"
             iconProps={{ iconName: "Leave" }}
-            onClick={() => {firebase.auth().signOut()}}
+            onClick={logout}
         />
     </>
 }

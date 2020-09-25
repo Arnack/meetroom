@@ -86,7 +86,7 @@ export const HorizontalNav:FunctionComponent<IProps> = ({user}) => {
                         <TopSeparator/>
                         <Persona text={user.displayName}
                                  imageUrl={user.photoURL}
-                                 onClick={() => {firebase.auth().signOut()}}
+                                 // onClick={() => {firebase.auth().signOut()}}
                                  size={PersonaSize.size24}
                         />
 
