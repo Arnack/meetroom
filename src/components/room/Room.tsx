@@ -9,6 +9,7 @@ import useCollection from "../../helpers/useCollection";
 import {DateFormat} from "../../model/types";
 import Peer from "peerjs";
 import {history} from "../../helpers/browserHistory";
+import {configuration} from "./roomConnectionConfig";
 
 interface IProps {
     id?: string;
@@ -23,13 +24,35 @@ export const Room: FC<IProps> = (props) => {
     let userVideo = useRef(null);
     let partnerVideo = useRef(null);
     let textRef = useRef(null);
-    let pc = null;
 
-    const [roomUsers, setRoomUsers] = useState([]);
 
-    const renewRoomUsers = () => {
+    let peerConnection: any = null;
+    let localStream = null;
+    let remoteStream = null;
+    let roomDialog = null;
+    let roomId = null;
 
-    }
+    const users = useCollection(`rooms/${props.match.params.id}/participants`)
+        .map((item: IUser) => {
+            return {
+                name: item.displayName,
+                email: item.email,
+                id: item.uid,
+                photoUrl: item.photoURL
+            }
+        });
+
+
+    //maybe useless
+    let roomRef = db.collection("rooms").doc(props.match.params.id);
+
+    const registerPeerConnectionListeners = () => {
+        peerConnection.addEventListener('icegatheringstatechange', () => {
+            console.log(
+                `ICE gathering state changed: ${peerConnection.iceGatheringState}`);
+        });
+    };
+
 
     const user: IUser = useStore(currentUser);
 
@@ -41,7 +64,6 @@ export const Room: FC<IProps> = (props) => {
     };
 
     const onMount = () => {
-
 
         /**
          * renew userList?
@@ -72,6 +94,7 @@ export const Room: FC<IProps> = (props) => {
 
     //for removing users (and TODO rooms in the future)
     const onUnMount = () => {
+
         if (user) {
             db
                 .collection("rooms")
@@ -79,12 +102,21 @@ export const Room: FC<IProps> = (props) => {
                 .collection("participants")
                 .doc(user.uid)
                 .delete()
-                .then(() => { //TODO probably move to return of useEffect
-                    if (!users.length) {
-                        removeCurrentRoom();
-                    }
+                .then(() => { //TODO refactor somehow
+                    //romm deletion if last user has left this room
+
+                    db.collection(`rooms/${props.match.params.id}/participants`).get()
+                        .then((snap) => {
+                            if (!snap.docs.length) {
+                                removeCurrentRoom();
+                            }
+                        })
+
                 })
                 .catch((err) => console.error(err.toString()));
+
+
+            console.log('users.length after', users.length);
         }
     }
 
@@ -110,26 +142,37 @@ export const Room: FC<IProps> = (props) => {
         onMount();
 
         return () => {
+            console.log('u l leave', users.length);
         }
     }, [user]);
 
 
+    useEffect(() => {
+
+        console.log('u l', users.length);
+
+        if (users && users.length && users[0].id &&
+            user && user.uid &&
+            users[0].id === user.uid) {
 
 
-
-    const users = useCollection(`rooms/${props.match.params.id}/participants`)
-        .map((item: IUser) => {
-            return {
-                name: item.displayName,
-                email: item.email,
-                id: item.uid,
-                photoUrl: item.photoURL
-            }
-        });
-    console.log('users', users);
+            navigator.mediaDevices.getUserMedia({
+                audio: true,
+                    video: true
+            }).then((stream) => {
+                //@ts-ignore
+                userVideo.current.srcObject = stream;
 
 
+                if (users.length > 1) {
 
+                }
+            });
+
+
+        }
+
+    }, [users, user])
 
 
 
@@ -149,7 +192,7 @@ export const Room: FC<IProps> = (props) => {
 
 
         <video playsInline muted
-               style={{width: '600px', height: '420px'}}
+               style={{width: '600px', height: '420px', transform: 'rotateY(180deg)'}}
                ref={userVideo} autoPlay />
         <video  playsInline muted
                 ref={partnerVideo} autoPlay />
