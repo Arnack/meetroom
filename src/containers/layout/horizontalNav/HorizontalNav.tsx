@@ -32,24 +32,24 @@ export const HorizontalNav:FunctionComponent<IProps> = ({user}) => {
             iconProps: { iconName: 'Home' },
             onClick: () => history.push('/')
         },
-        {
-            key: 'random',
-            text: t('random'),
-            iconProps: { iconName: 'UnknownSolid' },
-            onClick: () => history.push('/random')
-        },
-        {
-            key: 'users',
-            text: t('users'),
-            iconProps: { iconName: 'People' },
-            onClick: () => history.push('/users')
-        },
-        {
-            key: 'about',
-            text: t('about'),
-            iconProps: { iconName: 'WavingHand' },
-            onClick: () => history.push('/about')
-        },
+        // {
+        //     key: 'random',
+        //     text: t('random'),
+        //     iconProps: { iconName: 'UnknownSolid' },
+        //     onClick: () => history.push('/random')
+        // },
+        // {
+        //     key: 'users',
+        //     text: t('users'),
+        //     iconProps: { iconName: 'People' },
+        //     onClick: () => history.push('/users')
+        // },
+        // {
+        //     key: 'about',
+        //     text: t('about'),
+        //     iconProps: { iconName: 'WavingHand' },
+        //     onClick: () => history.push('/about')
+        // },
     ]
     const topMenuStyles = {
         root: {

@@ -10,6 +10,7 @@ import {DateFormat} from "../../model/types";
 import Peer from "peerjs";
 import {history} from "../../helpers/browserHistory";
 import {configuration} from "./roomConnectionConfig";
+import {VideoContainer} from "./VideoContainer";
 
 interface IProps {
     id?: string;
@@ -21,16 +22,7 @@ interface IState {
 
 export const Room: FC<IProps> = (props) => {
 
-    let userVideo = useRef(null);
-    let partnerVideo = useRef(null);
-    let textRef = useRef(null);
 
-
-    let peerConnection: any = null;
-    let localStream = null;
-    let remoteStream = null;
-    let roomDialog = null;
-    let roomId = null;
 
     const users = useCollection(`rooms/${props.match.params.id}/participants`)
         .map((item: IUser) => {
@@ -45,13 +37,6 @@ export const Room: FC<IProps> = (props) => {
 
     //maybe useless
     let roomRef = db.collection("rooms").doc(props.match.params.id);
-
-    const registerPeerConnectionListeners = () => {
-        peerConnection.addEventListener('icegatheringstatechange', () => {
-            console.log(
-                `ICE gathering state changed: ${peerConnection.iceGatheringState}`);
-        });
-    };
 
 
     const user: IUser = useStore(currentUser);
@@ -140,61 +125,10 @@ export const Room: FC<IProps> = (props) => {
 
     useEffect(() => {
         onMount();
-
-        return () => {
-            console.log('u l leave', users.length);
-        }
     }, [user]);
 
 
-    useEffect(() => {
-
-        console.log('u l', users.length);
-
-        if (users && users.length && users[0].id &&
-            user && user.uid &&
-            users[0].id === user.uid) {
-
-
-            navigator.mediaDevices.getUserMedia({
-                audio: true,
-                    video: true
-            }).then((stream) => {
-                //@ts-ignore
-                userVideo.current.srcObject = stream;
-
-
-                if (users.length > 1) {
-
-                }
-            });
-
-
-        }
-
-    }, [users, user])
-
-
-
     return <>
-        <button onClick={() => { }}>
-            Offer
-        </button>
-
-        <button onClick={() => {
-        }
-        }>
-            Answer
-        </button>
-
-        <textarea ref={textRef}></textarea>
-
-
-
-        <video playsInline muted
-               style={{width: '600px', height: '420px', transform: 'rotateY(180deg)'}}
-               ref={userVideo} autoPlay />
-        <video  playsInline muted
-                ref={partnerVideo} autoPlay />
+        <VideoContainer roomId={props.match.params.id} users={users} user={user} />
     </>;
 }
