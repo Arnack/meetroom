@@ -7,7 +7,6 @@ import {IUser} from "../../model/user/IUser";
 import {on} from "cluster";
 import useCollection from "../../helpers/useCollection";
 import {DateFormat} from "../../model/types";
-import Peer from "peerjs";
 import {history} from "../../helpers/browserHistory";
 import {configuration} from "./roomConnectionConfig";
 import {VideoContainer} from "./VideoContainer";
@@ -33,11 +32,6 @@ export const Room: FC<IProps> = (props) => {
                 photoUrl: item.photoURL
             }
         });
-
-
-    //maybe useless
-    let roomRef = db.collection("rooms").doc(props.match.params.id);
-
 
     const user: IUser = useStore(currentUser);
 
@@ -129,6 +123,6 @@ export const Room: FC<IProps> = (props) => {
 
 
     return <>
-        <VideoContainer roomId={props.match.params.id} users={users} user={user} />
+        {/*<VideoContainer roomId={props.match.params.id} users={users} user={user} />*/}
     </>;
 }
