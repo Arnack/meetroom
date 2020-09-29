@@ -1,15 +1,14 @@
 import React, {Component, FC, useEffect, useRef, useState} from "react";
 import {db, firebase} from "../../firebase";
-import {useAuth} from "../../helpers/useAuth";
 import {currentUser} from "../../stores/currentUserStore/currentUserStore";
 import {useStore} from "effector-react";
 import {IUser} from "../../model/user/IUser";
-import {on} from "cluster";
 import useCollection from "../../helpers/useCollection";
 import {DateFormat} from "../../model/types";
 import {history} from "../../helpers/browserHistory";
 import {configuration} from "./roomConnectionConfig";
 import {VideoContainer} from "./VideoContainer";
+import {VideoContainer2} from "./VideoConstainer2";
 
 interface IProps {
     id?: string;
@@ -123,6 +122,6 @@ export const Room: FC<IProps> = (props) => {
 
 
     return <>
-        {/*<VideoContainer roomId={props.match.params.id} users={users} user={user} />*/}
+        <VideoContainer2 roomId={props.match.params.id} users={users} user={user} />
     </>;
 }
