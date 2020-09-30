@@ -233,7 +233,7 @@ export const VideoContainer2: FC<IProps> = ({roomId, user, users}) => {
             console.log('roomWithAnswer', roomWithAnswer)
             console.log('roomWithAnswer answ', roomWithAnswer.answer)
 
-            await callRef.set(roomWithAnswer.answer); //was update
+            await callRef.update({answer: JSON.stringify(roomWithAnswer.answer)}); //was update
 
             callRef.collection('callerCandidates').onSnapshot(snapshot => {
                 snapshot.docChanges().forEach(async change => {
