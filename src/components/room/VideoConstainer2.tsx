@@ -119,11 +119,17 @@ export const VideoContainer2: FC<IProps> = ({roomId, user, users}) => {
 
                 try {
                     answer = JSON.parse(data.answer);
+
+                    console.log('answer??', answer);
+
                 } catch (e) {
                     console.error(e)
                 }
 
                 const rtcSessionDescription = new RTCSessionDescription(answer);
+
+                console.log('remote session descr', rtcSessionDescription)
+
                 await localPC.setRemoteDescription(rtcSessionDescription); //error here
             }
         });
@@ -189,6 +195,7 @@ export const VideoContainer2: FC<IProps> = ({roomId, user, users}) => {
             //may be e.track?
             if (e.streams && remoteStream !== e.streams) {
                 console.log('RemotePC received the stream call', e.streams);
+                console.log('RemotePC received the stream call 2', e.streams[0]);
                 setRemoteStream(e.streams[0]);
                 rremoteStream = e.streams[0];
 
@@ -230,8 +237,8 @@ export const VideoContainer2: FC<IProps> = ({roomId, user, users}) => {
 
             const roomWithAnswer = {answer};
 
-            console.log('roomWithAnswer', roomWithAnswer)
-            console.log('roomWithAnswer answ', roomWithAnswer.answer)
+            console.log('roomWithAnswer', roomWithAnswer);
+            console.log('roomWithAnswer answ', roomWithAnswer.answer);
 
             await callRef.update({answer: JSON.stringify(roomWithAnswer.answer)}); //was update
 
@@ -258,24 +265,24 @@ export const VideoContainer2: FC<IProps> = ({roomId, user, users}) => {
             if (users[0].id == user.uid) {
                 startLocalStream()
                     .then(() => {
-                    //     startCall(roomId)
-                    //         .then(() => {
-                    //
-                    //         })
-                    //         .catch((e) => {
-                    //             console.error('unable to call', e);
-                    //         });
-                    //
+                        startCall(roomId)
+                            .then(() => {
 
-                        setTimeout(() => {
-                            startCall(roomId)
-                                .then(() => {
+                            })
+                            .catch((e) => {
+                                console.error('unable to call', e);
+                            });
 
-                                })
-                                .catch((e) => {
-                                    console.error('unable to call', e);
-                                });
-                        }, 1100);
+
+                        // setTimeout(() => {
+                        //     startCall(roomId)
+                        //         .then(() => {
+                        //
+                        //         })
+                        //         .catch((e) => {
+                        //             console.error('unable to call', e);
+                        //         });
+                        // }, 1100);
                     })
                     .catch((e) => {
                         console.error('unable to start local stream', e);
@@ -288,23 +295,23 @@ export const VideoContainer2: FC<IProps> = ({roomId, user, users}) => {
                 startLocalStream()
                     .then(() => {
                         joinCall()
-                            // .then(() => {
-                            //
-                            // })
-                            // .catch((e) => {
-                            //     console.error('unable to join call', e);
-                            // });
+                            .then(() => {
+
+                            })
+                            .catch((e) => {
+                                console.error('unable to join call', e);
+                            });
 
 
-                        setTimeout(() => {
-                            joinCall()
-                                .then(() => {
-
-                                })
-                                .catch((e) => {
-                                    console.error('unable to call', e);
-                                });
-                        }, 1100);
+                        // setTimeout(() => {
+                        //     joinCall()
+                        //         .then(() => {
+                        //
+                        //         })
+                        //         .catch((e) => {
+                        //             console.error('unable to call', e);
+                        //         });
+                        // }, 1100);
                     })
                     .catch((e) => {
                         console.error('unable to start local stream (on join)', e);
