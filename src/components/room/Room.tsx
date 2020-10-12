@@ -9,6 +9,7 @@ import {history} from "../../helpers/browserHistory";
 import {configuration} from "./roomConnectionConfig";
 import {VideoContainer} from "./VideoContainer";
 import {VideoContainer2} from "./VideoConstainer2";
+import {VC3} from "./VC3";
 
 interface IProps {
     id?: string;
@@ -122,6 +123,7 @@ export const Room: FC<IProps> = (props) => {
 
 
     return <>
-        <VideoContainer2 roomId={props.match.params.id} users={users} user={user} />
+        {/*<VideoContainer2 roomId={props.match.params.id} users={users} user={user} />*/}
+        <VC3 roomId={props.match.params.id} users={users} user={user} />
     </>;
 }
