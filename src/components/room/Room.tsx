@@ -10,6 +10,7 @@ import {configuration} from "./roomConnectionConfig";
 import {VideoContainer} from "./VideoContainer";
 import {VideoContainer2} from "./VideoConstainer2";
 import {VC3} from "./VC3";
+import {VC4} from "./VC4";
 
 interface IProps {
     id?: string;
@@ -124,6 +125,7 @@ export const Room: FC<IProps> = (props) => {
 
     return <>
         {/*<VideoContainer2 roomId={props.match.params.id} users={users} user={user} />*/}
-        <VC3 roomId={props.match.params.id} users={users} user={user} />
+        {/*<VC3 roomId={props.match.params.id} users={users} user={user} />*/}
+        <VC4 roomId={props.match.params.id} users={users} user={user} />
     </>;
 }

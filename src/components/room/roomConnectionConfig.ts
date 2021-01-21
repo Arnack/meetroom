@@ -1,4 +1,5 @@
 export const configuration = {
+    host: 'http://ec2-34-227-149-124.compute-1.amazonaws.com:8888',
     'iceServers': [
         {
             urls: [

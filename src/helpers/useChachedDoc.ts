@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {db} from "../firebase";
 
-
 const docCache: any = {};
 const pendingDocCache: any = {};
 
@@ -25,12 +24,10 @@ export const useCachedDoc = (path: string) => {
                     ...doc.data(),
                     id: doc.id
                 }
-
                 setDoc(user);
                 docCache[path] = user;
             }
         });
-
 
         return () => {
             stillMounted = false;
