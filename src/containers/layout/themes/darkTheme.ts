@@ -1,7 +1,7 @@
 import { createTheme } from 'office-ui-fabric-react';
 
 export const darkTheme = createTheme({
-    defaultFontStyle: { fontFamily: 'Montserrat, Roboto, Helvetica Neue, sans-serif', fontWeight: 'normal' },
+    defaultFontStyle: { fontFamily: 'Roboto, Helvetica Neue, sans-serif', fontWeight: 'normal' },
     palette: {
         themePrimary: '#8eb580',
         themeLighterAlt: '#060705',
