@@ -14,53 +14,99 @@ const initializePeerConnection = (id: string) => {
     return new Peer(id, {config: configuration});
 }
 
-const initializeSocketConnection = () => {
-    console.log('try ws');
+let currentConn: any = null;
+let peer: any = null;
+let connn: any = null;
 
-    // return openSocket.connect('ws://ec2-34-227-149-124.compute-1.amazonaws.com:3006', {// need to provide backend server endpoint
-    return openSocket.connect('ws://localhost:3008', {// need to provide backend server endpoint
-        // (ws://localhost:5000) if ssl provided then
-        // (wss://localhost:5000)
-        reconnection: true,
-        rejectUnauthorized: false,
-        reconnectionAttempts: 10
-    });
-}
-
-
-export const VC4: FC<IProps> = ({roomId, user, users}) => {
+export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
     let userVideo = useRef(null);
     let partnerVideo = useRef(null);
-    let peercall: any;
 
-    let peer = initializePeerConnection(roomId);
-    // initializeSocketConnection();
+    if (!peer)
+        peer = initializePeerConnection(roomId + user.uid);
+    // if (!peer)
+    //     peer = new Peer(roomId + user.uid, { debug: 2 });
 
-    peer.on('open', (peerID) => {
-        console.log('opening peer connection, peer id', peerID);
+    peer.on('open', (peerID: any) => {
+        console.log('opened peer connection, peer id', peerID);
     });
 
-useEffect(() => {
-    console.log('s');
+    peer.on('connection', (conn: any) => {
+        console.log('connection invoked');
 
-    // openSocket.connect('ws://localhost:3006', {// need to provide backend server endpoint
-    //     // (ws://localhost:5000) if ssl provided then
-    //     // (wss://localhost:5000)
-    //     reconnection: true,
-    //     rejectUnauthorized: false,
-    //     reconnectionAttempts: 10
-    // });
+        conn.on('data', (data: any) => {
+            // Will print 'hi!'
+            console.log('recieved >>>> ', data);
+        });
+        conn.on('open', () => {
+            console.log('sending2...');
+            conn.send('hello!');
 
-    // openSocket('ws://localhost:3008');
-    initializeSocketConnection();
-}, []);
+
+            conn.on('data', (data: any) => {
+                // Will print 'hi!'
+                console.log('recieved xxx >>>> ', data);
+            });
+        });
+    });
+
+
+    useEffect(() => {
+        if (users.length > 1 && (user.uid === users[0].id)) {
+
+            // console.log("users", users);
+            // console.log("user02", users[1]);
+
+            // setTimeout(() => {
+
+            if (currentConn) {
+                currentConn.close();
+            }
+
+            currentConn = peer.connect(roomId + users[1].id, {reliable: true});
+
+            console.log('conn', currentConn, currentConn?.open);
+
+            currentConn?.send('[eq')
+
+            currentConn?.on('open', () => {
+                console.log('sending...');
+                currentConn.send('hi!');
+            });
+
+            currentConn?.on('data', () => {
+                console.log('on dta...');
+                // currentConn.send('hi!');
+            });
+
+            currentConn?.on('close', () => {
+                console.log('closed');
+                // currentConn.send('hi!');
+            });
+
+
+            // }, 2000);
+
+        }
+    }, [users]);
+
 
     return <>
-        <textarea
-            value={users.toString()}
-        >
-        </textarea>
+        <button onClick={() => {
+            if (users.length > 1) {
+
+                console.log('trying');
+
+                const otherId = roomId + user.uid === users[0].id ? users[1].id : users[0].id;
+
+                currentConn.send("хуй");
+
+            }
+        }
+        }
+        >call
+        </button>
 
         <video playsInline
                style={{transform: 'rotateY(180deg)'}}
@@ -70,3 +116,9 @@ useEffect(() => {
                ref={partnerVideo} autoPlay/>
     </>
 }
+
+// export const VC4 = React.memo(VCPeerjs, (prev, next) => {
+//     return prev.user.uid === next.user.uid && prev.users.length === next.users.length
+// })
+
+export const VC4 = React.memo(VCPeerjs);
