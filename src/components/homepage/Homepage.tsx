@@ -5,6 +5,7 @@ import { PrimaryButton, IconButton } from "office-ui-fabric-react";
 import { AddNewButton } from "../shared/addNewButton/AddNewButton";
 import {useBoolean} from "@uifabric/react-hooks";
 import NewRoom from "./roomList/newRoom/newRoom";
+import {firebase} from "../../firebase";
 
 export const Homepage = () => {
 
@@ -12,9 +13,11 @@ export const Homepage = () => {
 
     return <>
         <div className="home-search-container">
+            <AddNewButton callBack={showModal} />
 
             <RoomList />
-            <AddNewButton callBack={showModal} />
+
+
         </div>
         <NewRoom isOpen={isModalOpen} hideModal={hideModal} />
     </>
