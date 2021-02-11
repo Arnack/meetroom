@@ -64,6 +64,12 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
             navigator.mediaDevices.getUserMedia({ video: true, audio: false })
                 .then((stream) => {
                     call.answer(stream);
+
+                    if (userVideo.current) {
+                        // @ts-ignore
+                        userVideo.current.srcObject = stream;
+                    }
+
                     call.on('stream', (remoteStream: any) => {
                         if (partnerVideo.current) {
                             // @ts-ignore
@@ -93,6 +99,11 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
                     call.on('stream', (remoteStream: any) => {
                         console.log('rS', remoteStream);
                         // Show stream in some <video> element.
+
+                        if (partnerVideo.current) {
+                            // @ts-ignore
+                            partnerVideo.current.srcObject = remoteStream;
+                        }
                     });
 
                     if (userVideo.current) {
