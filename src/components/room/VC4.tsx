@@ -20,43 +20,65 @@ let connn: any = null;
 
 export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
+
+
+
     let userVideo = useRef(null);
     let partnerVideo = useRef(null);
 
-    if (!peer)
-        peer = initializePeerConnection(roomId + user.uid);
-    // if (!peer)
-    //     peer = new Peer(roomId + user.uid, { debug: 2 });
 
-    peer.on('open', (peerID: any) => {
-        console.log('opened peer connection, peer id', peerID);
-    });
+    if (user) {
+        // if (!peer)
+        //     peer = initializePeerConnection(roomId + user.uid);
+        if (!peer)
+            peer = new Peer(roomId + user.uid, {debug: 2});
 
-    peer.on('connection', (conn: any) => {
-        console.log('connection invoked');
-
-        conn.on('data', (data: any) => {
-            // Will print 'hi!'
-            console.log('recieved >>>> ', data);
+        peer.on('open', (peerID: any) => {
+            console.log('opened peer connection, peer id', peerID);
         });
-        conn.on('open', () => {
-            console.log('sending2...');
-            conn.send('hello!');
 
+        peer.on('connection', (conn: any) => {
+            console.log('connection invoked');
 
             conn.on('data', (data: any) => {
                 // Will print 'hi!'
-                console.log('recieved xxx >>>> ', data);
+                console.log('recieved >>>> ', data);
+            });
+            conn.on('open', () => {
+                console.log('sending2...');
+                conn.send('hello!');
+
+
+                conn.on('data', (data: any) => {
+                    // Will print 'hi!'
+                    console.log('recieved xxx >>>> ', data);
+                });
             });
         });
-    });
 
+
+        peer.on('call', (call: any) => {
+
+            console.log('on call call', call)
+
+            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+                .then((stream) => {
+                    call.answer(stream);
+                    call.on('stream', (remoteStream: any) => {
+                        if (partnerVideo.current) {
+                            // @ts-ignore
+                            partnerVideo.current.srcObject = remoteStream;
+                        }
+                    })
+                })
+                .catch((err) => {
+                    console.log('err while call answering', err.toString());
+                })
+        })
+    }
 
     useEffect(() => {
         if (users.length > 1 && (user.uid === users[0].id)) {
-
-            // console.log("users", users);
-            // console.log("user02", users[1]);
 
             // setTimeout(() => {
 
@@ -64,11 +86,27 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
                 currentConn.close();
             }
 
+            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+                .then((stream) => {
+
+                    const call = peer.call(roomId + users[1].id, stream);
+                    call.on('stream', (remoteStream: any) => {
+                        console.log('rS', remoteStream);
+                        // Show stream in some <video> element.
+                    });
+
+                    if (userVideo.current) {
+                        // @ts-ignore
+                        userVideo.current.srcObject = stream;
+                    }
+                })
+                .catch((err) => {
+                    console.log('err while calling', err.toString());
+                })
+
             currentConn = peer.connect(roomId + users[1].id, {reliable: true});
 
             console.log('conn', currentConn, currentConn?.open);
-
-            currentConn?.send('[eq')
 
             currentConn?.on('open', () => {
                 console.log('sending...');
@@ -100,7 +138,7 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
                 const otherId = roomId + user.uid === users[0].id ? users[1].id : users[0].id;
 
-                currentConn.send("хуй");
+                currentConn?.send("хуй");
 
             }
         }
