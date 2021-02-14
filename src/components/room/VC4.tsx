@@ -1,8 +1,19 @@
-import React, {FC, useEffect, useRef} from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
 import {IUser} from "../../model/user/IUser";
 import {configuration} from "./roomConnectionConfig";
 import Peer, {MediaConnection} from "peerjs";
 import openSocket from 'socket.io-client';
+import './VC.scss';
+import { FontIcon } from 'office-ui-fabric-react/lib/Icon';
+import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
+
+
+const actionIconClass = mergeStyles({
+    fontSize: 50,
+    height: 50,
+    width: 50,
+    margin: '0 25px',
+});
 
 interface IProps {
     roomId: string;
@@ -21,8 +32,10 @@ let connn: any = null;
 export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
 
+    const [isUserVideoActive, setIsUserVideoActive] = useState(false);
+    const [isUserAudioActive, setIsUserAudioActive] = useState(false);
 
-
+    let activeVideo = useRef(null);
     let userVideo = useRef(null);
     let partnerVideo = useRef(null);
 
@@ -143,27 +156,34 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
 
     return <>
-        <button onClick={() => {
-            if (users.length > 1) {
+        <div className={"video-board"}>
+            <div className="active-video-container">
+                <video playsInline
+                       className="video active-video"
+                       ref={activeVideo} autoPlay/>
+            </div>
+            <div className="video-tumbs">
+                {user && <video playsInline
+                        className="video your-video"
+                        style={{backgroundImage: `url(${user?.photoURL})`}}
+                        ref={userVideo} autoPlay/>}
+                <video playsInline
+                       className="video partner-video"
+                       ref={partnerVideo} autoPlay/>
+            </div>
+            <div className="call-action-panel">
+                <div className="call-actions">
+                    <FontIcon iconName={isUserAudioActive ? "Microphone" : "MicOff2"} className={actionIconClass}
+                        onClick={() => setIsUserAudioActive(!isUserAudioActive)}
+                    />
+                    <FontIcon iconName={isUserVideoActive ? "Video" : "VideoOff"} className={actionIconClass}
+                        onClick={() => setIsUserVideoActive(!isUserVideoActive)}
+                    />
+                </div>
+            </div>
 
-                console.log('trying');
+        </div>
 
-                const otherId = roomId + user.uid === users[0].id ? users[1].id : users[0].id;
-
-                currentConn?.send("хуй");
-
-            }
-        }
-        }
-        >call
-        </button>
-
-        <video playsInline
-               style={{transform: 'rotateY(180deg)'}}
-               ref={userVideo} autoPlay/>
-        <video playsInline
-               style={{transform: 'rotateY(180deg)'}}
-               ref={partnerVideo} autoPlay/>
     </>
 }
 

@@ -48,7 +48,7 @@ const languages = [
 const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
 
     const [topic, setTopic] = useState('');
-    const [peopleCount, setPeopleCount] = useState(3);
+    const [peopleCount, setPeopleCount] = useState(2);
     const [language, setLanguage] = useState('');
     const [level, setLevel] = useState('0');
 
@@ -125,7 +125,7 @@ const NewRoom: FunctionComponent<IProps> = ({isOpen, hideModal}) => {
 
                 <Slider
                     min={2}
-                    max={5}
+                    max={2}
                     value={peopleCount}
                     label={"Maximum People"}
                     onChange={(count) => setPeopleCount(count)}
