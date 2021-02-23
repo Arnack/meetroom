@@ -1,9 +1,51 @@
-.video {
+video {
+  background-size: cover;
+  background-position: center;
   transform: rotateY(180deg);
 }
 
+.video-tumbs {
+  position: fixed;
+  width: 200px;
+  top: 80px;
+  left: 16px;
+
+  video {
+    background-size: cover;
+    background-color: rgba(144, 238, 144, 0.31);
+    background-position: center;
+    transform: rotateY(180deg);
+    width: 180px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .video-tumb-name {
+    position: relative;
+    left: 12px;
+    bottom: 28px;
+    color: #dfaf5d;
+    mix-blend-mode: difference;
+    font-weight: bold;
+  }
+}
+
+
+.active-video-container {
+  .active-video {
+    height: calc(100vh - 220px);
+    border: 1px dashed steelblue;
+  }
+}
+
 .call-action-panel {
-  position: absolute;
-  bottom: 0px;
-  background: rgba(0, 0, 0, 0.16);
+  position: fixed;
+  left: 0;
+  width: 100%;
+  bottom: 12px;
+
+  .call-actions {
+    width: 315px;
+    margin: 0 auto;
+  }
 }

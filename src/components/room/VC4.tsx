@@ -4,15 +4,28 @@ import {configuration} from "./roomConnectionConfig";
 import Peer, {MediaConnection} from "peerjs";
 import openSocket from 'socket.io-client';
 import './VC.scss';
-import { FontIcon } from 'office-ui-fabric-react/lib/Icon';
-import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
+import {FontIcon} from 'office-ui-fabric-react/lib/Icon';
+import {mergeStyles} from 'office-ui-fabric-react/lib/Styling';
+import {history} from "../../helpers/browserHistory";
+import {Panel} from 'office-ui-fabric-react/lib/Panel';
 
 
 const actionIconClass = mergeStyles({
-    fontSize: 50,
-    height: 50,
-    width: 50,
-    margin: '0 25px',
+    fontSize: 20,
+    height: 35,
+    width: 35,
+    border: '2px solid white',
+    borderRadius: "50%",
+    cursor: "pointer",
+    margin: '0 12px',
+    textAlign: "center",
+    lineHeight: "35px",
+    transition: ".2s",
+    selectors: {
+        ":hover": {
+            backgroundColor: "rgba(0, 0, 0, 0.16)",
+        }
+    }
 });
 
 interface IProps {
@@ -34,10 +47,38 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
     const [isUserVideoActive, setIsUserVideoActive] = useState(false);
     const [isUserAudioActive, setIsUserAudioActive] = useState(false);
+    const [isScreenSharing, setIsScreenSharing] = useState(false);
+
+    const [isChatOpened, setIsChatOpened] = useState(false);
+
 
     let activeVideo = useRef(null);
     let userVideo = useRef(null);
     let partnerVideo = useRef(null);
+    let partnerVideo1 = useRef(null);
+    let partnerVideo2 = useRef(null);
+    let partnerVideo3 = useRef(null);
+    let partnerVideo4 = useRef(null);
+
+    const selectVideo = (ref: any) => {
+        // @ts-ignore
+        activeVideo.current.srcObject = ref.current.srcObject;
+    }
+
+    const selectRef = (idx: number) => {
+        switch (idx) {
+            case 0:
+                return partnerVideo;
+            case 1:
+                return partnerVideo1;
+            case 2:
+                return partnerVideo2;
+            case 3:
+                return partnerVideo3;
+            case 4:
+                return partnerVideo4;
+        }
+    }
 
 
     if (user) {
@@ -71,7 +112,7 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
 
         peer.on('call', (call: any) => {
-            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            navigator.mediaDevices.getUserMedia({video: true, audio: false})
                 .then((stream) => {
                     call.answer(stream);
 
@@ -84,7 +125,6 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
                 .catch((err) => {
                     console.log('err while call answering', err.toString());
                 });
-
 
 
             call.on('stream', (remoteStream: any) => {
@@ -106,7 +146,7 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
                 currentConn.close();
             }
 
-            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            navigator.mediaDevices.getUserMedia({video: true, audio: false})
                 .then((stream) => {
 
                     const call = peer.call(roomId + users[1].id, stream);
@@ -154,30 +194,68 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
         }
     }, [users]);
 
-
     return <>
+        <Panel
+            headerText="Chat"
+            // this prop makes the panel non-modal
+            isBlocking={false}
+            isOpen={isChatOpened}
+            onDismiss={() => setIsChatOpened(false)}
+            closeButtonAriaLabel="Close"
+        >
+            <input/>
+        </Panel>
         <div className={"video-board"}>
+
             <div className="active-video-container">
                 <video playsInline
                        className="video active-video"
                        ref={activeVideo} autoPlay/>
             </div>
             <div className="video-tumbs">
-                {user && <video playsInline
-                        className="video your-video"
-                        style={{backgroundImage: `url(${user?.photoURL})`}}
-                        ref={userVideo} autoPlay/>}
-                <video playsInline
-                       className="video partner-video"
-                       ref={partnerVideo} autoPlay/>
+                {users
+                    // .filter((item) => item.id !== user.uid)
+                    .map((singleUser, index) => {
+                        return <div className={"video-tumb-item_container"}>
+                            <video playsInline
+                                   onClick={() => selectVideo(selectRef(index))}
+                                   key={singleUser.id}
+                                   className={`video partner-video ${singleUser?.photoUrl}`}
+                                   style={{backgroundImage: `url(${singleUser?.photoUrl})`}}
+                                   ref={selectRef(index)}
+                                   autoPlay/>
+                            <span className={"video-tumb-name"}>{singleUser.name}</span>
+                        </div>
+                    }
+                )}
+
+                {/*{user && <div className={"video-tumb-item_container"}>*/}
+                {/*    <video playsInline*/}
+                {/*           className="video your-video"*/}
+                {/*           style={{backgroundImage: `url(${user?.photoURL})`}}*/}
+                {/*           ref={userVideo} autoPlay>*/}
+
+                {/*    </video>*/}
+                {/*    <span className={"video-tumb-name"}>{user.displayName}</span>*/}
+                {/*</div>*/}
+                {/*}*/}
             </div>
             <div className="call-action-panel">
                 <div className="call-actions">
+                    <FontIcon iconName={"DeclineCall"} className={actionIconClass}
+                              onClick={() => history.push("/")}
+                    />
+                    <FontIcon iconName={isScreenSharing ? "TVMonitor" : "TVMonitor"} className={actionIconClass}
+                              onClick={() => setIsScreenSharing(!isUserAudioActive)}
+                    />
                     <FontIcon iconName={isUserAudioActive ? "Microphone" : "MicOff2"} className={actionIconClass}
-                        onClick={() => setIsUserAudioActive(!isUserAudioActive)}
+                              onClick={() => setIsUserAudioActive(!isUserAudioActive)}
                     />
                     <FontIcon iconName={isUserVideoActive ? "Video" : "VideoOff"} className={actionIconClass}
-                        onClick={() => setIsUserVideoActive(!isUserVideoActive)}
+                              onClick={() => setIsUserVideoActive(!isUserVideoActive)}
+                    />
+                    <FontIcon iconName={"Comment"} className={actionIconClass}
+                              onClick={() => setIsChatOpened(!isChatOpened)}
                     />
                 </div>
             </div>
