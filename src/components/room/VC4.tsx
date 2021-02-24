@@ -40,7 +40,13 @@ const initializePeerConnection = (id: string) => {
 
 let currentConn: any = null;
 let peer: any = null;
-let connn: any = null;
+
+let currentUserRef: any = null;
+let stream0: any = null;
+let stream1: any = null;
+let stream2: any = null;
+let stream3: any = null;
+let stream4: any = null;
 
 export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
@@ -138,15 +144,33 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
     }
 
     useEffect(() => {
+            if (user && !currentUserRef) {
+
+                navigator.mediaDevices.getUserMedia({video: true, audio: true})
+                    .then((stream) => {
+
+                        //TODO wrap with try/catch
+                        // @ts-ignore
+                        userVideo.current.srcObject = stream;
+                        currentUserRef = userVideo;
+
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    })
+            }
+        },
+        [user, users]);
+
+    useEffect(() => {
         if (users.length > 1 && (user.uid === users[0].id)) {
 
             // setTimeout(() => {
-
             if (currentConn) {
                 currentConn.close();
             }
 
-            navigator.mediaDevices.getUserMedia({video: true, audio: false})
+            navigator.mediaDevices.getUserMedia({video: true, audio: true})
                 .then((stream) => {
 
                     const call = peer.call(roomId + users[1].id, stream);
@@ -214,31 +238,31 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
             </div>
             <div className="video-tumbs">
                 {users
-                    // .filter((item) => item.id !== user.uid)
+                    .filter((item) => item.id !== user.uid)
                     .map((singleUser, index) => {
-                        return <div className={"video-tumb-item_container"}>
-                            <video playsInline
-                                   onClick={() => selectVideo(selectRef(index))}
-                                   key={singleUser.id}
-                                   className={`video partner-video ${singleUser?.photoUrl}`}
-                                   style={{backgroundImage: `url(${singleUser?.photoUrl})`}}
-                                   ref={selectRef(index)}
-                                   autoPlay/>
-                            <span className={"video-tumb-name"}>{singleUser.name}</span>
-                        </div>
-                    }
-                )}
+                            return <div key={"video-tumb" + singleUser.id} className={"video-tumb-item_container"}>
+                                <video playsInline
+                                       onClick={() => selectVideo(selectRef(index))}
+                                       key={singleUser.id}
+                                       className={`video partner-video ${singleUser?.photoUrl}`}
+                                       style={{backgroundImage: `url(${singleUser?.photoUrl})`}}
+                                       ref={selectRef(index)}
+                                       autoPlay/>
+                                <span className={"video-tumb-name"}>{singleUser.name}</span>
+                            </div>
+                        }
+                    )}
 
-                {/*{user && <div className={"video-tumb-item_container"}>*/}
-                {/*    <video playsInline*/}
-                {/*           className="video your-video"*/}
-                {/*           style={{backgroundImage: `url(${user?.photoURL})`}}*/}
-                {/*           ref={userVideo} autoPlay>*/}
+                {user && <div className={"video-tumb-item_container"}>
+                    <video playsInline
+                           className="video your-video"
+                           style={{backgroundImage: `url(${user?.photoURL})`}}
+                           ref={userVideo} autoPlay>
 
-                {/*    </video>*/}
-                {/*    <span className={"video-tumb-name"}>{user.displayName}</span>*/}
-                {/*</div>*/}
-                {/*}*/}
+                    </video>
+                    <span className={"video-tumb-name"}>{user.displayName}</span>
+                </div>
+                }
             </div>
             <div className="call-action-panel">
                 <div className="call-actions">
