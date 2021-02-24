@@ -49,8 +49,6 @@ let stream3: any = null;
 let stream4: any = null;
 
 export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
-
-
     const [isUserVideoActive, setIsUserVideoActive] = useState(false);
     const [isUserAudioActive, setIsUserAudioActive] = useState(false);
     const [isScreenSharing, setIsScreenSharing] = useState(false);
@@ -87,72 +85,72 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
     }
 
 
-    if (user) {
-        // if (!peer)
-        //     peer = initializePeerConnection(roomId + user.uid);
-        if (!peer)
-            peer = new Peer(roomId + user.uid, {debug: 2});
-
-        peer.on('open', (peerID: any) => {
-            console.log('opened peer connection, peer id', peerID);
-        });
-
-        peer.on('connection', (conn: any) => {
-            console.log('connection invoked');
-
-            conn.on('data', (data: any) => {
-                // Will print 'hi!'
-                console.log('recieved >>>> ', data);
-            });
-            conn.on('open', () => {
-                console.log('sending2...');
-                conn.send('hello!');
-
-
-                conn.on('data', (data: any) => {
-                    // Will print 'hi!'
-                    console.log('recieved xxx >>>> ', data);
-                });
-            });
-        });
-
-
-        peer.on('call', (call: any) => {
-            navigator.mediaDevices.getUserMedia({video: true, audio: false})
-                .then((stream) => {
-                    call.answer(stream);
-
-                    if (userVideo.current) {
-                        console.log(1);
-                        // @ts-ignore
-                        userVideo.current.srcObject = stream;
-                    }
-                })
-                .catch((err) => {
-                    console.log('err while call answering', err.toString());
-                });
-
-
-            call.on('stream', (remoteStream: any) => {
-                if (partnerVideo.current) {
-
-                    // @ts-ignore
-                    partnerVideo.current.srcObject = remoteStream;
-                }
-            })
-        })
-    }
+    // if (user) {
+    //     // if (!peer)
+    //     //     peer = initializePeerConnection(roomId + user.uid);
+    //     if (!peer)
+    //         peer = new Peer(roomId + user.uid, {debug: 2});
+    //
+    //     peer.on('open', (peerID: any) => {
+    //         console.log('opened peer connection, peer id', peerID);
+    //     });
+    //
+    //     peer.on('connection', (conn: any) => {
+    //         console.log('connection invoked');
+    //
+    //         conn.on('data', (data: any) => {
+    //             console.log('recieved >>>> ', data);// Will print 'hi!'
+    //         });
+    //         conn.on('open', () => {
+    //             console.log('sending2...');
+    //             conn.send('hello!');
+    //
+    //
+    //             conn.on('data', (data: any) => {
+    //                 console.log('recieved xxx >>>> ', data);// Will print 'hi!'
+    //             });
+    //         });
+    //     });
+    //
+    //
+    //     peer.on('call', (call: any) => {
+    //         navigator.mediaDevices.getUserMedia({video: true, audio: false})
+    //             .then((stream) => {
+    //                 call.answer(stream);
+    //
+    //                 if (userVideo.current) {
+    //                     console.log(1);
+    //                     // @ts-ignore
+    //                     userVideo.current.srcObject = stream;
+    //                 }
+    //             })
+    //             .catch((err) => {
+    //                 console.log('err while call answering', err.toString());
+    //             });
+    //
+    //
+    //         call.on('stream', (remoteStream: any) => {
+    //             if (partnerVideo.current) {
+    //
+    //                 // @ts-ignore
+    //                 partnerVideo.current.srcObject = remoteStream;
+    //             }
+    //         })
+    //     })
+    // }
 
     useEffect(() => {
             if (user && !currentUserRef) {
-
                 navigator.mediaDevices.getUserMedia({video: true, audio: true})
                     .then((stream) => {
 
                         //TODO wrap with try/catch
-                        // @ts-ignore
-                        userVideo.current.srcObject = stream;
+                        if (userVideo.current) {
+                            // @ts-ignore
+                            userVideo.current.srcObject = stream;
+                        }
                         currentUserRef = userVideo;
+                        stream0 = stream;
 
                     })
                     .catch((err) => {
