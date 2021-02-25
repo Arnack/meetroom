@@ -32,9 +32,18 @@ video {
 
 
 .active-video-container {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 44px);
+
   .active-video {
-    height: calc(100vh - 220px);
-    border: 1px dashed steelblue;
+    height: calc(100vh - 46px);
+    /* border: 1px dashed steelblue; */
+    width: 100vw;
+    background: black;
+    object-fit: cover;
   }
 }
 

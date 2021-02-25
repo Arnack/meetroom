@@ -52,8 +52,8 @@ let currentUserCallMap = new Map();
 let streamMap = new Map();
 
 export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
-    const [isUserVideoActive, setIsUserVideoActive] = useState(false);
-    const [isUserAudioActive, setIsUserAudioActive] = useState(false);
+    const [isUserVideoActive, setIsUserVideoActive] = useState(true);
+    const [isUserAudioActive, setIsUserAudioActive] = useState(true);
     const [isScreenSharing, setIsScreenSharing] = useState(false);
 
     const [isChatOpened, setIsChatOpened] = useState(false);
@@ -138,9 +138,7 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
             call.on('stream', (remoteStream: any) => {
                 if (partnerVideo.current) {
-
-
-                    console.log('139', remoteStream)
+                    console.log('141', remoteStream)
                     // @ts-ignore
                     partnerVideo.current.srcObject = remoteStream;
                 }
@@ -189,6 +187,33 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
                         ref.current.srcObject = remoteStream;
                     }
                 });
+            }
+
+            return () => {
+                console.log('closing peer connection');
+
+                //TODO try catch
+                // @ts-ignore
+                if (userVideo && userVideo.current && userVideo.current.srcObject) {
+                    // @ts-ignore
+                    const tracks = userVideo.current.srcObject.getTracks();
+
+                    console.log('tracks', tracks);
+
+                    tracks.forEach((track: MediaStreamTrack) => {
+                        track.stop();
+                    });
+
+                    // navigator.mediaDevices.
+                }
+
+                if (peer) {
+                    peer.destroy();
+                }
+                if (stream0) {
+                    // stream0.
+                }
+
             }
         },
         [user, users]);
@@ -287,6 +312,7 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
                 {user && <div className={"video-tumb-item_container"}>
                     <video playsInline
+                           onClick={() => selectVideo(userVideo)}
                            className="video your-video"
                            style={{backgroundImage: `url(${user?.photoURL})`}}
                            ref={userVideo} autoPlay>
