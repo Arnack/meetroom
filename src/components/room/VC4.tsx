@@ -48,6 +48,9 @@ let stream2: any = null;
 let stream3: any = null;
 let stream4: any = null;
 
+let currentUserCallMap = new Map();
+let streamMap = new Map();
+
 export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
     const [isUserVideoActive, setIsUserVideoActive] = useState(false);
     const [isUserAudioActive, setIsUserAudioActive] = useState(false);
@@ -113,33 +116,39 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
     //     });
     //
     //
-    //     peer.on('call', (call: any) => {
-    //         navigator.mediaDevices.getUserMedia({video: true, audio: false})
-    //             .then((stream) => {
-    //                 call.answer(stream);
-    //
-    //                 if (userVideo.current) {
-    //                     console.log(1);
-    //                     // @ts-ignore
-    //                     userVideo.current.srcObject = stream;
-    //                 }
-    //             })
-    //             .catch((err) => {
-    //                 console.log('err while call answering', err.toString());
-    //             });
-    //
-    //
-    //         call.on('stream', (remoteStream: any) => {
-    //             if (partnerVideo.current) {
-    //
-    //                 // @ts-ignore
-    //                 partnerVideo.current.srcObject = remoteStream;
-    //             }
-    //         })
-    //     })
+        peer.on('call', (call: any) => {
+            navigator.mediaDevices.getUserMedia({video: true, audio: true})
+                .then((stream) => {
+                    call.answer(stream);
+
+                    if (userVideo.current) {
+                        console.log(1);
+                        // @ts-ignore
+                        userVideo.current.srcObject = stream;
+                    }
+                })
+                .catch((err) => {
+                    console.log('err while call answering', err.toString());
+                });
+
+
+            call.on('stream', (remoteStream: any) => {
+                if (partnerVideo.current) {
+
+
+                    console.log('139', remoteStream)
+                    // @ts-ignore
+                    partnerVideo.current.srcObject = remoteStream;
+                }
+            })
+        })
     // }
 
     useEffect(() => {
+            if (!peer) {
+                peer = new Peer(roomId + user.uid, {debug: 2});
+            }
+
             if (user && !currentUserRef) {
                 navigator.mediaDevices.getUserMedia({video: true, audio: true})
                     .then((stream) => {
@@ -157,64 +166,82 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
                         console.error(err);
                     })
             }
+
+            for (let i = 0; i < users.length; i++) {
+                if (users[i].id === user.uid) {
+                    continue;
+                }
+
+                const call = peer.call(roomId + users[i].id, stream0);
+
+                call.on('stream', (remoteStream: any) => {
+                    console.log('rS', remoteStream);
+                    const ref = selectRef(i);
+                    if (ref?.current) {
+                        // @ts-ignore
+                        ref.current.srcObject = remoteStream;
+                    }
+                });
+            }
         },
         [user, users]);
 
-    useEffect(() => {
-        if (users.length > 1 && (user.uid === users[0].id)) {
 
-            // setTimeout(() => {
-            if (currentConn) {
-                currentConn.close();
-            }
-
-            navigator.mediaDevices.getUserMedia({video: true, audio: true})
-                .then((stream) => {
-
-                    const call = peer.call(roomId + users[1].id, stream);
-                    call.on('stream', (remoteStream: any) => {
-                        console.log('rS', remoteStream);
-                        // Show stream in some <video> element.
-
-                        if (partnerVideo.current) {
-                            // @ts-ignore
-                            partnerVideo.current.srcObject = remoteStream;
-                        }
-                    });
-
-                    if (userVideo.current) {
-                        // @ts-ignore
-                        userVideo.current.srcObject = stream;
-                    }
-                })
-                .catch((err) => {
-                    console.log('err while calling', err.toString());
-                })
-
-            currentConn = peer.connect(roomId + users[1].id, {reliable: true});
-
-            console.log('conn', currentConn, currentConn?.open);
-
-            currentConn?.on('open', () => {
-                console.log('sending...');
-                currentConn.send('hi!');
-            });
-
-            currentConn?.on('data', () => {
-                console.log('on dta...');
-                // currentConn.send('hi!');
-            });
-
-            currentConn?.on('close', () => {
-                console.log('closed');
-                // currentConn.send('hi!');
-            });
-
-
-            // }, 2000);
-
-        }
-    }, [users]);
+    // useEffect(() => {
+    //     if (users.length > 1 && (user.uid === users[0].id)) {
+    //
+    //         // setTimeout(() => {
+    //         if (currentConn) {
+    //             currentConn.close();
+    //         }
+    //
+    //         navigator.mediaDevices.getUserMedia({video: true, audio: true})
+    //             .then((stream) => {
+    //
+    //                 const call = peer.call(roomId + users[1].id, stream);
+    //                 call.on('stream', (remoteStream: any) => {
+    //                     console.log('rS', remoteStream);
+    //                     // Show stream in some <video> element.
+    //
+    //                     if (partnerVideo.current) {
+    //                         // @ts-ignore
+    //                         partnerVideo.current.srcObject = remoteStream;
+    //                     }
+    //                 });
+    //
+    //                 if (userVideo.current) {
+    //                     // @ts-ignore
+    //                     userVideo.current.srcObject = stream;
+    //                 }
+    //             })
+    //             .catch((err) => {
+    //                 console.log('err while calling', err.toString());
+    //             })
+    //
+    //         currentConn = peer.connect(roomId + users[1].id, {reliable: true});
+    //
+    //         console.log('conn', currentConn, currentConn?.open);
+    //
+    //         currentConn?.on('open', () => {
+    //             console.log('sending...');
+    //             currentConn.send('hi!');
+    //         });
+    //
+    //         currentConn?.on('data', () => {
+    //             console.log('on dta...');
+    //             // currentConn.send('hi!');
+    //         });
+    //
+    //         currentConn?.on('close', () => {
+    //             console.log('closed');
+    //             // currentConn.send('hi!');
+    //         });
+    //
+    //
+    //         // }, 2000);
+    //
+    //     }
+    // }, [users]);
 
     return <>
         <Panel
