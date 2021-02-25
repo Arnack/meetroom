@@ -189,35 +189,39 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
                 });
             }
 
-            return () => {
-                console.log('closing peer connection');
 
-                //TODO try catch
-                // @ts-ignore
-                if (userVideo && userVideo.current && userVideo.current.srcObject) {
-                    // @ts-ignore
-                    const tracks = userVideo.current.srcObject.getTracks();
-
-                    console.log('tracks', tracks);
-
-                    tracks.forEach((track: MediaStreamTrack) => {
-                        track.stop();
-                    });
-
-                    // navigator.mediaDevices.
-                }
-
-                if (peer) {
-                    peer.destroy();
-                }
-                if (stream0) {
-                    // stream0.
-                }
-
-            }
         },
         [user, users]);
 
+
+    useEffect(() => {
+        return () => {
+            console.log('closing peer connection');
+
+            //TODO try catch
+            // @ts-ignore
+            if (userVideo && userVideo.current && userVideo.current.srcObject) {
+                // @ts-ignore
+                const tracks = userVideo.current.srcObject.getTracks();
+
+                console.log('tracks', tracks);
+
+                tracks.forEach((track: MediaStreamTrack) => {
+                    track.stop();
+                });
+
+                // navigator.mediaDevices.
+            }
+
+            if (peer) {
+                peer.destroy();
+            }
+            if (stream0) {
+                // stream0.
+            }
+
+        }
+    }, [])
 
     // useEffect(() => {
     //     if (users.length > 1 && (user.uid === users[0].id)) {
