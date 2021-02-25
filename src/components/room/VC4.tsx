@@ -116,6 +116,10 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
     //     });
     //
     //
+
+    if (!peer) {
+        peer = new Peer(roomId + user.uid, {debug: 2});
+    }
         peer.on('call', (call: any) => {
             navigator.mediaDevices.getUserMedia({video: true, audio: true})
                 .then((stream) => {
