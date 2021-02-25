@@ -178,7 +178,10 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
                 const call = peer.call(roomId + users[i].id, stream0);
 
-                call.on('stream', (remoteStream: any) => {
+                console.log('call', call);
+                console.log('stream0', stream0);
+
+                call?.on('stream', (remoteStream: any) => {
                     console.log('rS', remoteStream);
                     const ref = selectRef(i);
                     if (ref?.current) {
