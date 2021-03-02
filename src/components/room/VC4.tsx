@@ -8,6 +8,7 @@ import {FontIcon} from 'office-ui-fabric-react/lib/Icon';
 import {mergeStyles} from 'office-ui-fabric-react/lib/Styling';
 import {history} from "../../helpers/browserHistory";
 import {Panel} from 'office-ui-fabric-react/lib/Panel';
+import { TextField } from 'office-ui-fabric-react/lib/TextField';
 
 
 const actionIconClass = mergeStyles({
@@ -24,6 +25,25 @@ const actionIconClass = mergeStyles({
     selectors: {
         ":hover": {
             backgroundColor: "rgba(0, 0, 0, 0.16)",
+        }
+    }
+});
+const callDismissClass = mergeStyles({
+    fontSize: 20,
+    height: 35,
+    width: 35,
+    backgroundColor: "red",
+    border: '2px solid red',
+    borderRadius: "50%",
+    cursor: "pointer",
+    margin: '0 12px',
+    textAlign: "center",
+    lineHeight: "35px",
+    transition: ".2s",
+    selectors: {
+        ":hover": {
+            backgroundColor: "indianred",
+            borderColor: "indianred"
         }
     }
 });
@@ -50,6 +70,22 @@ let stream4: any = null;
 
 let currentUserCallMap = new Map();
 let streamMap = new Map();
+
+
+const toggleUserVideo = (flag: boolean) => {
+    try {
+        stream0.getVideoTracks()[0].enabled = flag
+    } catch (e) {
+        console.error('e', e)
+    }
+}
+const toggleUserAudio = (flag: boolean) => {
+    try {
+        stream0.getAudioTracks()[0].enabled = flag
+    } catch (e) {
+        console.error('e', e)
+    }
+}
 
 export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
     const [isUserVideoActive, setIsUserVideoActive] = useState(true);
@@ -288,7 +324,18 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
             onDismiss={() => setIsChatOpened(false)}
             closeButtonAriaLabel="Close"
         >
-            <input/>
+            <div className="chat-wrapper">
+                <div className="chat-messages-wrapper">
+
+
+                </div>
+
+                <div className="chat-input-wrapper">
+                    <TextField className={"chat-input"} placeholder={"Write a message..."} />
+                </div>
+            </div>
+
+
         </Panel>
         <div className={"video-board"}>
 
@@ -328,17 +375,23 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
             </div>
             <div className="call-action-panel">
                 <div className="call-actions">
-                    <FontIcon iconName={"DeclineCall"} className={actionIconClass}
+                    <FontIcon iconName={"DeclineCall"} className={callDismissClass}
                               onClick={() => history.push("/")}
                     />
                     <FontIcon iconName={isScreenSharing ? "TVMonitor" : "TVMonitor"} className={actionIconClass}
                               onClick={() => setIsScreenSharing(!isUserAudioActive)}
                     />
                     <FontIcon iconName={isUserAudioActive ? "Microphone" : "MicOff2"} className={actionIconClass}
-                              onClick={() => setIsUserAudioActive(!isUserAudioActive)}
+                              onClick={() => {
+                                  toggleUserAudio(!isUserAudioActive);
+                                  setIsUserAudioActive(!isUserAudioActive);
+                              }}
                     />
                     <FontIcon iconName={isUserVideoActive ? "Video" : "VideoOff"} className={actionIconClass}
-                              onClick={() => setIsUserVideoActive(!isUserVideoActive)}
+                              onClick={() => {
+                                  toggleUserVideo(!isUserVideoActive);
+                                  setIsUserVideoActive(!isUserVideoActive);
+                              }}
                     />
                     <FontIcon iconName={"Comment"} className={actionIconClass}
                               onClick={() => setIsChatOpened(!isChatOpened)}

@@ -18,15 +18,27 @@ video {
     width: 180px;
     border-radius: 8px;
     cursor: pointer;
+    border: 1px solid #d3d3d36e;
   }
 
   .video-tumb-name {
     position: relative;
     left: 12px;
     bottom: 28px;
-    color: #dfaf5d;
+    //color: #dfaf5d;
+    color: steelblue;
     mix-blend-mode: difference;
     font-weight: bold;
+  }
+}
+
+@media screen and  (max-width: 1000px){
+  .video-tumbs {
+    width: 120px;
+
+    video {
+      width: 112px;
+    }
   }
 }
 
@@ -52,6 +64,12 @@ video {
   left: 0;
   width: 100%;
   bottom: 12px;
+  opacity: .2;
+  transition: .2s;
+
+  &:hover {
+    opacity: 1;
+  }
 
   .call-actions {
     width: 315px;
@@ -60,5 +78,13 @@ video {
     & i {
       user-select: none;
     }
+  }
+}
+
+.chat-wrapper {
+  .chat-input-wrapper {
+    position: absolute;
+    bottom: 12px;
+    min-width: 290px;
   }
 }
