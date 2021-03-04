@@ -160,23 +160,22 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
     if (!peer) {
         peer = new Peer(roomId + user.uid, {debug: 2});
     }
-        peer.on('call', (call: any) => {
+        peer.on('call', (call: any) => { // call obj has partner's peerId
+            call.answer(yourStream);
 
-            console.log('call o', call);
 
-            navigator.mediaDevices.getUserMedia({video: true, audio: true})
-                .then((stream) => {
-                    call.answer(stream);
-
-                    if (userVideo.current) {
-                        console.log(1);
-                        // @ts-ignore
-                        userVideo.current.srcObject = stream;
-                    }
-                })
-                .catch((err) => {
-                    console.log('err while call answering', err.toString());
-                });
+            // navigator.mediaDevices.getUserMedia({video: true, audio: true})
+            //     .then((stream) => {
+            //         call.answer(stream);
+            //
+            //         if (userVideo.current) {
+            //             // @ts-ignore
+            //             userVideo.current.srcObject = stream;
+            //         }
+            //     })
+            //     .catch((err) => {
+            //         console.log('err while call answering', err.toString());
+            //     });
 
 
             call.on('stream', (remoteStream: any) => {
@@ -233,6 +232,28 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
         }
     }, [user]);
 
+
+
+// turning off camera and mic
+    useEffect(() => {
+        return () => {
+            // @ts-ignore
+            if (userVideo && userVideo.current && userVideo.current.srcObject) {
+                // @ts-ignore
+                const tracks = userVideo.current.srcObject.getTracks();
+
+                tracks.forEach((track: MediaStreamTrack) => {
+                    track.stop();
+                });
+            }
+
+            if (peer) {
+                peer.destroy();
+            }
+
+        }
+    }, []);
+
     useEffect(() => {
             if (!peer) {
                 peer = new Peer(roomId + user.uid, {debug: 2});
@@ -262,61 +283,6 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
         },
         [users]);
 
-    // useEffect(() => {
-    //     if (users.length > 1 && (user.uid === users[0].id)) {
-    //
-    //         // setTimeout(() => {
-    //         if (currentConn) {
-    //             currentConn.close();
-    //         }
-    //
-    //         navigator.mediaDevices.getUserMedia({video: true, audio: true})
-    //             .then((stream) => {
-    //
-    //                 const call = peer.call(roomId + users[1].id, stream);
-    //                 call.on('stream', (remoteStream: any) => {
-    //                     console.log('rS', remoteStream);
-    //                     // Show stream in some <video> element.
-    //
-    //                     if (partnerVideo.current) {
-    //                         // @ts-ignore
-    //                         partnerVideo.current.srcObject = remoteStream;
-    //                     }
-    //                 });
-    //
-    //                 if (userVideo.current) {
-    //                     // @ts-ignore
-    //                     userVideo.current.srcObject = stream;
-    //                 }
-    //             })
-    //             .catch((err) => {
-    //                 console.log('err while calling', err.toString());
-    //             })
-    //
-    //         currentConn = peer.connect(roomId + users[1].id, {reliable: true});
-    //
-    //         console.log('conn', currentConn, currentConn?.open);
-    //
-    //         currentConn?.on('open', () => {
-    //             console.log('sending...');
-    //             currentConn.send('hi!');
-    //         });
-    //
-    //         currentConn?.on('data', () => {
-    //             console.log('on dta...');
-    //             // currentConn.send('hi!');
-    //         });
-    //
-    //         currentConn?.on('close', () => {
-    //             console.log('closed');
-    //             // currentConn.send('hi!');
-    //         });
-    //
-    //
-    //         // }, 2000);
-    //
-    //     }
-    // }, [users]);
 
     return <>
         <Panel
