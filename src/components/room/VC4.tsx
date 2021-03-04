@@ -163,21 +163,6 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
         peer.on('call', (call: any) => { // call obj has partner's peerId
             call.answer(yourStream);
 
-
-            // navigator.mediaDevices.getUserMedia({video: true, audio: true})
-            //     .then((stream) => {
-            //         call.answer(stream);
-            //
-            //         if (userVideo.current) {
-            //             // @ts-ignore
-            //             userVideo.current.srcObject = stream;
-            //         }
-            //     })
-            //     .catch((err) => {
-            //         console.log('err while call answering', err.toString());
-            //     });
-
-
             call.on('stream', (remoteStream: any) => {
                 if (partnerVideo.current) {
                     console.log('141', remoteStream)
