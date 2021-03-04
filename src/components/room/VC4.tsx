@@ -58,35 +58,39 @@ const initializePeerConnection = (id: string) => {
     return new Peer(id, {config: configuration});
 }
 
-let currentConn: any = null;
 let peer: any = null;
 
 let currentUserRef: any = null;
-let stream0: any = null;
+let yourStream: any = null;
+
 let stream1: any = null;
 let stream2: any = null;
 let stream3: any = null;
 let stream4: any = null;
 
-let currentUserCallMap = new Map();
-let streamMap = new Map();
+let callAnswers = new Map();
+let callAnswersStreams = new Map();
+
+let incomingCalls = new Map();
+let incomingCallsStreams = new Map();
 
 
 const toggleUserVideo = (flag: boolean) => {
     try {
-        stream0.getVideoTracks()[0].enabled = flag
+        yourStream.getVideoTracks()[0].enabled = flag
     } catch (e) {
         console.error('e', e)
     }
 }
 const toggleUserAudio = (flag: boolean) => {
     try {
-        stream0.getAudioTracks()[0].enabled = flag
+        yourStream.getAudioTracks()[0].enabled = flag
     } catch (e) {
         console.error('e', e)
     }
 }
 
+// export const VC4: FC<IProps> = ({roomId, user, users}) => {
 export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
     const [isUserVideoActive, setIsUserVideoActive] = useState(true);
     const [isUserAudioActive, setIsUserAudioActive] = useState(true);
@@ -157,6 +161,9 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
         peer = new Peer(roomId + user.uid, {debug: 2});
     }
         peer.on('call', (call: any) => {
+
+            console.log('call o', call);
+
             navigator.mediaDevices.getUserMedia({video: true, audio: true})
                 .then((stream) => {
                     call.answer(stream);
@@ -182,27 +189,53 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
         })
     // }
 
+
+    const getUserMedia = () => {
+        if (user && !currentUserRef) {
+            navigator.mediaDevices.getUserMedia({video: true, audio: true})
+                .then((stream) => {
+
+                    if (userVideo.current) {
+                        // @ts-ignore
+                        userVideo.current.srcObject = stream;
+                    }
+                    currentUserRef = userVideo; //?
+                    yourStream = stream;
+
+                })
+                .catch((err) => {
+                    console.error(err);
+                })
+        }
+    }
+
+    // set your stream and so on
+    useEffect(() => {
+        getUserMedia();
+
+
+// turning off camera and mic
+        return () => {
+            // @ts-ignore
+            if (userVideo && userVideo.current && userVideo.current.srcObject) {
+                // @ts-ignore
+                const tracks = userVideo.current.srcObject.getTracks();
+
+                tracks.forEach((track: MediaStreamTrack) => {
+                    track.stop();
+                });
+            }
+
+            if (peer) {
+                peer.destroy();
+            }
+
+        }
+    }, [user]);
+
     useEffect(() => {
             if (!peer) {
                 peer = new Peer(roomId + user.uid, {debug: 2});
-            }
-
-            if (user && !currentUserRef) {
-                navigator.mediaDevices.getUserMedia({video: true, audio: true})
-                    .then((stream) => {
-
-                        //TODO wrap with try/catch
-                        if (userVideo.current) {
-                            // @ts-ignore
-                            userVideo.current.srcObject = stream;
-                        }
-                        currentUserRef = userVideo;
-                        stream0 = stream;
-
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    })
             }
 
             for (let i = 0; i < users.length; i++) {
@@ -210,10 +243,10 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
                     continue;
                 }
 
-                const call = peer.call(roomId + users[i].id, stream0);
+                const call = peer.call(roomId + users[i].id, yourStream);
 
                 console.log('call', call);
-                console.log('stream0', stream0);
+                console.log('stream0', yourStream);
 
                 call?.on('stream', (remoteStream: any) => {
                     console.log('rS', remoteStream);
@@ -227,37 +260,7 @@ export const VCPeerjs: FC<IProps> = ({roomId, user, users}) => {
 
 
         },
-        [user, users]);
-
-
-    useEffect(() => {
-        return () => {
-            console.log('closing peer connection');
-
-            //TODO try catch
-            // @ts-ignore
-            if (userVideo && userVideo.current && userVideo.current.srcObject) {
-                // @ts-ignore
-                const tracks = userVideo.current.srcObject.getTracks();
-
-                console.log('tracks', tracks);
-
-                tracks.forEach((track: MediaStreamTrack) => {
-                    track.stop();
-                });
-
-                // navigator.mediaDevices.
-            }
-
-            if (peer) {
-                peer.destroy();
-            }
-            if (stream0) {
-                // stream0.
-            }
-
-        }
-    }, [])
+        [users]);
 
     // useEffect(() => {
     //     if (users.length > 1 && (user.uid === users[0].id)) {
